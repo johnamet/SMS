@@ -2,11 +2,12 @@
 """
 This module contains the Feedbacks model
 """
+from sqlalchemy import Column, String, ForeignKey
 
-from models.basemodel import BaseModel
+from models.basemodel import BaseModel, Base
 
 
-class Feedbacks(BaseModel):
+class Feedbacks(BaseModel, Base):
     """
     Feedbacks model
     Args:
@@ -15,6 +16,9 @@ class Feedbacks(BaseModel):
     """
 
     __tablename__ = 'feedbacks'
+
+    content = Column(String, nullable=False)
+    user_id = Column(String, ForeignKey('users.id'), nullable=False)
 
     def __init__(self, content, user_id, **kwargs):
         super().__init__(**kwargs)

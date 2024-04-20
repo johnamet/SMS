@@ -2,10 +2,12 @@
 """
 This module contains the Staff model.
 """
-from models.basemodel import BaseModel
+from sqlalchemy import Column, String, ForeignKey
+
+from models.basemodel import BaseModel, Base
 
 
-class Staff(BaseModel):
+class Staff(BaseModel, Base):
     """
     Staff model.
     Args:
@@ -16,15 +18,17 @@ class Staff(BaseModel):
         department (str): the department of the staff.
         pension_fund_acc (str): the pension fund account of the staff.
         status (str): the status of the staff.
+        role (str): the role of the staff.
     """
 
     __tablename__ = 'staff'
+    id = Column(String, ForeignKey("users.id"), primary_key=True)
 
     def __init__(self, id, marital_status=None,
                  qualifications=[],
                  bank_acc=None,
                  department=None,
-                 pension_fund_acc=None, status="active", *args, **kwargs):
+                 pension_fund_acc=None, role="teacher",status="active", *args, **kwargs):
         super().__init__(self, *args, **kwargs)
 
         self.id = id
@@ -34,3 +38,4 @@ class Staff(BaseModel):
         self.department = department
         self.pension_fund_acc = pension_fund_acc
         self.status = status
+        self.role = role

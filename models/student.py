@@ -2,10 +2,13 @@
 """
 Student Model
 """
+from sqlalchemy import Column, String, ForeignKey, DateTime
+from sqlalchemy.orm import relationship
+
 from models import User
+from models.basemodel import Base
 
-
-class Student(User):
+class Student(User, Base):
     """
     Student Model
     Args:
@@ -15,6 +18,10 @@ class Student(User):
     """
 
     __tablename__ = 'students'
+    parent_id = Column(String, ForeignKey('students.id'), nullable=False)
+    expected_graduation = Column(DateTime, nullable=False)
+    admission_date = Column(DateTime, nullable=False)
+    parents = relationship('ParentChildAssociation', backref='student', cascade='all, delete')
 
     def __init__(self, parent_id,
                  expected_graduation,

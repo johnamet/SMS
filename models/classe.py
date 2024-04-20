@@ -3,13 +3,20 @@
 """
 The script defines the class model
 """
-from models.basemodel import BaseModel
+from sqlalchemy import String, Column, ForeignKey
+
+from models.basemodel import BaseModel, Base
 
 
-class Class(BaseModel):
+class Class(BaseModel, Base):
     """
     The class model
     """
+    __tablename__ = 'classes'
+    class_name = Column(String, nullable=False)
+    head_class_teacher = Column(String, ForeignKey("staff.id"), nullable=False)
+    academic_year = Column(String, nullable=False)
+    assist_class_teacher = Column(String, ForeignKey("staff.id"), nullable=True)
 
     def __init__(self, class_name,
                  head_class_teacher,

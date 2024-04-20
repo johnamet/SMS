@@ -5,10 +5,10 @@ The script defines the attendance model
 """
 from sqlalchemy import Column, String, ForeignKey, Integer
 
-from models.basemodel import BaseModel
+from models.basemodel import BaseModel, Base
 
 
-class Attendance(BaseModel):
+class Attendance(BaseModel, Base):
     """
     The attendance model
     Args:

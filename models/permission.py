@@ -2,10 +2,12 @@
 """
 The permission classes defined in this module
 """
-from models.basemodel import BaseModel
+from sqlalchemy import Column, String, ForeignKey
+
+from models.basemodel import BaseModel, Base
 
 
-class Permission(BaseModel):
+class Permission(BaseModel, Base):
     """
     The permission for each role
     Args:
@@ -14,6 +16,9 @@ class Permission(BaseModel):
         role_id: id of the role
     """
     __tablename__ = 'permissions'
+    permission_name = Column(String, unique=True, nullable=False)
+    permission_desc = Column(String, nullable=False)
+    role_id = Column(String, ForeignKey('roles.id'), nullable=False)
 
     def __init__(self, permission_name, role_id, permission_desc=""):
         super().__init__(self)

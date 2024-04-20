@@ -3,10 +3,12 @@
 """
 The script defines the Gradebook class, which represents a Gradebook.
 """
-from models.basemodel import BaseModel
+from sqlalchemy import Column, Integer, ForeignKey
+
+from models.basemodel import BaseModel, Base
 
 
-class Gradebook(BaseModel):
+class Gradebook(BaseModel, Base):
     """
     The Gradebook class represents a Gradebook.
     Args:
@@ -16,6 +18,10 @@ class Gradebook(BaseModel):
         student_id (str): The student of the gradebook.
     """
     __tablename__ = 'gradebook'
+    grade = Column(Integer, nullable=False)
+    course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
+    student_id = Column(Integer, ForeignKey('students.id'), nullable=False)
+    class_id = Column(Integer, ForeignKey('classes.id'), nullable=False)
 
     def __init__(self, grade, course_id, class_id, student_id, *args, **kwargs):
         super().__init__(self, *args, **kwargs)

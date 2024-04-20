@@ -11,7 +11,7 @@ class TestParentModel(unittest.TestCase):
         self.user = User("John", "Ametepe",
                          "john@gmail.com", "password")
         self.parent = Parent(
-            id=self.user.id,
+            parent_id=self.user.id,
             marital_status="Married",
             occupation="Engineer"
         )

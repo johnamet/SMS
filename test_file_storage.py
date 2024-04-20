@@ -13,7 +13,7 @@ user = User(first_name="John", last_name="Ametepe",
 
 user2 = User(first_name="Ameyo", last_name="Ametepe", email="", password='<PASSWORD>')
 
-parent1 = Parent(id=user2.id)
+parent1 = Parent(parent_id=user2.id)
 staff = Staff(id=user.id)
 student = Student(parent_id=parent1.id,
                   expected_graduation=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),

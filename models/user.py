@@ -3,11 +3,14 @@
 The user model
 """
 from datetime import datetime
+from sqlite3 import Date
 
-from models.basemodel import BaseModel
+from sqlalchemy import Column, String, Boolean
+
+from models.basemodel import BaseModel, Base
 
 
-class User(BaseModel):
+class User(BaseModel, Base):
     """
     The user model inherits from the base model
 
@@ -22,6 +25,18 @@ class User(BaseModel):
     """
 
     __tablename__ = 'users'
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    email = Column(String(50), nullable=False)
+    password = Column(String(50), nullable=False)
+    other_names = Column(String(50), nullable=False)
+    contact_number = Column(String(50), nullable=False)
+    dob = Column(Date, nullable=False)
+    address = Column(String(50), nullable=False)
+    last_login_date = Column(Date, nullable=False)
+    last_login_ip = Column(String(50), nullable=False)
+    registration_date = Column(Date, nullable=False)
+    is_active = Column(Boolean(), default=True)
 
     def __init__(self, first_name, last_name, email,
                  password,
@@ -29,6 +44,8 @@ class User(BaseModel):
                  contact_number=None,
                  address=None,
                  dob=None,
+                 last_login_date=datetime.now().strftime('%Y-%m-%d %H:%M:%S'),
+                 last_login_ip=None,
                  *args, **kwargs):
         super().__init__(self, *args, **kwargs)
 
@@ -41,6 +58,8 @@ class User(BaseModel):
         self.other_names = other_names
         self.contact_number = contact_number
         self.address = address
-        self.last_login_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        self.last_login_date = last_login_date
+        self.last_login_ip = last_login_ip
         self.registration_date = None
         self.dob = dob
+        self.is_active = False
