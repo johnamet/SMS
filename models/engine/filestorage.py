@@ -39,8 +39,8 @@ class FileStorage:
         return objs_s
 
     def __deserialize(self, data):
-        cls = classes[data['__class__']]
         for key, obj_data in data.items():
+            cls = classes[obj_data['__class__']]
             self.__objs[key] = cls(**obj_data)
 
     def save(self):
@@ -55,3 +55,7 @@ class FileStorage:
                 self.__deserialize(data)
         except FileNotFoundError:
             pass
+
+    def close(self):
+        self.__objs.clear()
+

@@ -51,7 +51,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertIsNone(self.user.dob)
 
     def test_last_login_date(self):
-        self.assertTrue(self.user.last_login_date < datetime.now())
+        self.assertTrue(datetime.strptime(self.user.last_login_date, "%Y-%m-%d %H:%M:%S") < datetime.now())
 
     def test_registration_date(self):
         self.assertIsNone(self.user.registration_date)

@@ -20,7 +20,8 @@ class BaseModel:
         self.created_at = kwargs.get("created_at", datetime.now())
         self.updated_at = kwargs.get("updated_at", datetime.now())
         for k, v in kwargs.items():
-            setattr(self, k, v)
+            if k != "__class__":
+                setattr(self, k, v)
 
     def __str__(self):
         """
@@ -47,8 +48,10 @@ class BaseModel:
         The method to serialize a model
         """
         obj_s = self.__dict__.copy()
-        obj_s["created_at"] = self.created_at.strftime("%Y-%m-%d %H:%M:%S")
-        obj_s["updated_at"] = self.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+        if type(obj_s["created_at"]) == datetime:
+            obj_s["created_at"] = self.created_at.strftime("%Y-%m-%d %H:%M:%S")
+        if type(obj_s["updated_at"]) == datetime:
+            obj_s["updated_at"] = self.updated_at.strftime("%Y-%m-%d %H:%M:%S")
         obj_s["__class__"] = self.__class__.__name__
         return obj_s
 

@@ -41,6 +41,6 @@ class User(BaseModel):
         self.other_names = other_names
         self.contact_number = contact_number
         self.address = address
-        self.last_login_date = datetime.now()
+        self.last_login_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.registration_date = None
         self.dob = dob
