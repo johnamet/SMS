@@ -3,6 +3,8 @@
 """
 The script defines the attendance model
 """
+from sqlalchemy import Column, String, ForeignKey, Integer
+
 from models.basemodel import BaseModel
 
 
@@ -16,9 +18,13 @@ class Attendance(BaseModel):
     """
 
     __tablename__ = 'attendance'
+    class_id = Column(String, ForeignKey('classes.id'), nullable=False)
+    student_id = Column(String, ForeignKey('students.id'), nullable=False)
+    status = Column(Integer, nullable=False)
+    term = Column(String, nullable=False)
 
     def __init__(self, class_id, student_id, term, status, *args, **kwargs):
-        super().__init__( *args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.class_id = class_id
         self.student_id = student_id
         self.term = term

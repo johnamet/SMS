@@ -1,6 +1,6 @@
 #!/usr/bin/python3
-import unittest
 import os
+import unittest
 
 from models import BaseModel
 from models.engine.filestorage import FileStorage

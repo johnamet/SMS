@@ -18,7 +18,7 @@ class Gradebook(BaseModel):
     __tablename__ = 'gradebook'
 
     def __init__(self, grade, course_id, class_id, student_id, *args, **kwargs):
-        super().__init__(self,*args, **kwargs)
+        super().__init__(self, *args, **kwargs)
         self.grade = grade
         self.course_id = course_id
         self.class_id = class_id

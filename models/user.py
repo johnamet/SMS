@@ -30,7 +30,7 @@ class User(BaseModel):
                  address=None,
                  dob=None,
                  *args, **kwargs):
-        super().__init__( self, *args, **kwargs)
+        super().__init__(self, *args, **kwargs)
 
         if contact_number is None:
             contact_number = []

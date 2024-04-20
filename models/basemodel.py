@@ -5,6 +5,11 @@ The base for all models
 from datetime import datetime
 from uuid import uuid4
 
+from sqlalchemy import Column, UUID, DateTime
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
 
 class BaseModel:
     """
@@ -14,6 +19,10 @@ class BaseModel:
         created_at (datetime): the creation time of the model
         updated_at (datetime): the last update time of the model
     """
+
+    id = Column(UUID(as_uuid=True), primary_key=True, default=uuid4)
+    created_at = Column(DateTime(timezone=True), default=datetime.utcnow)
+    updated_at = Column(DateTime(timezone=True), default=datetime.utcnow)
 
     def __init__(self, *args, **kwargs):
         self.id = kwargs.get("id", str(uuid4()))

@@ -1,6 +1,7 @@
 import unittest
-from models.course import Course
 from datetime import datetime
+
+from models.course import Course
 
 
 class TestCourseModel(unittest.TestCase):

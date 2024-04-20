@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 import unittest
 from datetime import datetime
+
 from models.staff import Staff
 from models.user import User
 
@@ -10,7 +11,7 @@ class TestStaffModel(unittest.TestCase):
         self.user = User(first_name="Johnny", last_name="Ametepe",
                          email='<EMAIL>', password='<PASSWORD>')
         self.staff = Staff(
-            staff_id=self.user.id,
+            id=self.user.id,
             marital_status="Single",
             qualifications=["BSc", "MSc"],
             bank_acc="1234567890",

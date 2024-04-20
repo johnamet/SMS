@@ -4,6 +4,7 @@ Tests for the permission model.
 """
 import unittest
 from datetime import datetime
+
 from models.permission import Permission
 
 

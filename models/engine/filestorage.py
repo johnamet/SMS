@@ -1,7 +1,25 @@
-import os
 import json
+import os
 
-from models import classes
+from models.announcement import Announcement
+from models.attendance import Attendance
+from models.basemodel import BaseModel
+from models.classe import Class
+from models.course import Course
+from models.feedbacks import Feedbacks
+from models.gradebook import Gradebook
+from models.parent import Parent
+from models.permission import Permission
+from models.staff import Staff
+from models.student import Student
+from models.user import User
+
+classes = {"BaseModel": BaseModel, "User": User,
+           "Course": Course, "Announcement": Announcement,
+           "Feedbacks": Feedbacks, "Student": Student, "Parent": Parent,
+           "Staff": Staff, "Gradebook": Gradebook, "Permission": Permission,
+           "Attendance": Attendance, "Class": Class}
+
 
 class FileStorage:
     """
@@ -22,7 +40,13 @@ class FileStorage:
             except FileExistsError:
                 pass
 
-    def all(self):
+    def all(self, cls=None):
+        filtered_objs = {}
+        if cls is not None:
+            for key, cls in self.__objs.items():
+                if cls[__class__] == cls:
+                    filtered_objs[key] = cls
+            return filtered_objs
         return self.__objs
 
     def new(self, obj):
@@ -31,6 +55,7 @@ class FileStorage:
         """
         key = f"{obj.__class__.__name__}.{obj.id}"
         self.__objs[key] = obj
+        self.save()
 
     def __serialize(self):
         objs_s = {}
@@ -59,3 +84,7 @@ class FileStorage:
     def close(self):
         self.__objs.clear()
 
+    def delete(self, obj):
+        key = f"{obj.__class__.__name__}.{obj.id}"
+        self.__objs.pop(key, None)
+        self.save()

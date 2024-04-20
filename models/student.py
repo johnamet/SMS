@@ -8,6 +8,10 @@ from models import User
 class Student(User):
     """
     Student Model
+    Args:
+        parent_id (str): Parent student id
+        expected_graduation (datetime): Expected graduation date
+        admission_date (datetime): Admission date
     """
 
     __tablename__ = 'students'
