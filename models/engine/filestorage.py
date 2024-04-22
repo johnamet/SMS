@@ -1,12 +1,13 @@
 import json
 import os
 
+from models.feedback import Feedback
+
 from models.announcement import Announcement
 from models.attendance import Attendance
 from models.basemodel import BaseModel
 from models.classe import Class
 from models.course import Course
-from models.feedbacks import Feedbacks
 from models.gradebook import Gradebook
 from models.parent import Parent
 from models.permission import Permission
@@ -16,7 +17,7 @@ from models.user import User
 
 classes = {"BaseModel": BaseModel, "User": User,
            "Course": Course, "Announcement": Announcement,
-           "Feedbacks": Feedbacks, "Student": Student, "Parent": Parent,
+           "Feedbacks": Feedback, "Student": Student, "Parent": Parent,
            "Staff": Staff, "Gradebook": Gradebook, "Permission": Permission,
            "Attendance": Attendance, "Class": Class}
 

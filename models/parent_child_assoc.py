@@ -1,19 +1,32 @@
-#!/usr/bin/python3
-"""
-Parent Child Association script
-"""
-from models.basemodel import Base
-from sqlalchemy import Column, ForeignKey, String
-from sqlalchemy.orm import relationship
-
-
-class ParentChildAssociation(Base):
-    """
-    Parent Child Association table links parent/child relationships
-    """
-    __tablename__ = 'parent_child_association'
-    parent_id = Column(String, ForeignKey('parent.id'), nullable=False)
-    student_id = Column(String, ForeignKey('student.id'), nullable=False)
-    child = relationship('Student', backref='parents', cascade='all, delete, delete-orphan')
-    parent = relationship('Parent', backref='children', cascade='all, delete, delete-orphan')
-    extra_data = Column(String(100), nullable=True)
+# #!/usr/bin/python3
+# """
+# Parent Child Association script
+# """
+#
+# from sqlalchemy import Column, ForeignKey, String
+# from sqlalchemy.orm import relationship
+#
+# from models.basemodel import Base
+#
+#
+# class ParentChildAssociation(Base):
+#     """
+#     The ParentChildAssociation model represents the association between parents and children.
+#
+#     Attributes:
+#         parent_id (str): The ID of the parent.
+#         student_id (str): The ID of the student (child).
+#         child (relationship): Relationship attribute to access the associated Student instance.
+#         parent (relationship): Relationship attribute to access the associated Parent instance.
+#         extra_data (str): Additional data related to the parent-child relationship.
+#     """
+#
+#     __tablename__ = 'parent_student_association'
+#
+#     parent_id = Column(String, ForeignKey('parents.id'), nullable=False, primary_key=True)
+#     student_id = Column(String, ForeignKey('students.id'), nullable=False, primary_key=True)
+#     students = relationship('Student', back_populates='parents', )
+#     parents = relationship('Parent', back_populates='students', )
+#     description = Column(String(100), nullable=True)
+#
+#     __table_args__ = {'extend_existing': True}

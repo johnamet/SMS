@@ -2,12 +2,12 @@
 import unittest
 from datetime import datetime
 
-from models.feedbacks import Feedbacks
+from models.feedback import Feedback
 
 
 class TestFeedbacksModel(unittest.TestCase):
     def setUp(self):
-        self.feedback = Feedbacks(
+        self.feedback = Feedback(
             content="Great job!",
             user_id=1
         )

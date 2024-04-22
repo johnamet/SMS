@@ -13,7 +13,7 @@ from models.basemodel import Base
 from models.basemodel import BaseModel
 from models.classe import Class
 from models.course import Course
-from models.feedbacks import Feedbacks
+from models.feedback import Feedback
 from models.gradebook import Gradebook
 from models.parent import Parent
 from models.permission import Permission
@@ -24,7 +24,7 @@ from models.user import User
 # Dictionary to map class names to actual class objects
 classes = {"BaseModel": BaseModel, "User": User,
            "Course": Course, "Announcement": Announcement,
-           "Feedbacks": Feedbacks, "Student": Student, "Parent": Parent,
+           "Feedbacks": Feedback, "Student": Student, "Parent": Parent,
            "Staff": Staff, "Gradebook": Gradebook, "Permission": Permission,
            "Attendance": Attendance, "Class": Class}
 
@@ -144,5 +144,5 @@ class DBStorage:
 
 
 # Instantiate the storage engine
-dbstorage = DBStorage()
-dbstorage.reload()
+# dbstorage = DBStorage()
+# dbstorage.reload()

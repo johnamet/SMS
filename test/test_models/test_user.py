@@ -7,7 +7,9 @@ from models.user import User
 class UserModelTestCase(unittest.TestCase):
     def setUp(self):
         self.user = User("first", "last",
-                         "test@test.com", "password")
+                         "test@test.com", "password",)
+        self.user.contact_number = []
+        self.user.feedbacks = []
 
     def test_user(self):
         self.assertTrue(self.user is not None)
@@ -16,7 +18,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertTrue(self.user.id is not None)
 
     def test_first_name(self):
-        self.assertTrue(self.user.first_name is "first")
+        self.assertTrue(self.user.first_name == "first")
 
     def test_created_date(self):
         self.assertTrue(self.user.created_at < datetime.now())
@@ -51,7 +53,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertIsNone(self.user.dob)
 
     def test_last_login_date(self):
-        self.assertTrue(datetime.strptime(self.user.last_login_date, "%Y-%m-%d %H:%M:%S") < datetime.now())
+        self.assertTrue(self.user.last_login_date < datetime.now())
 
     def test_registration_date(self):
         self.assertIsNone(self.user.registration_date)
