@@ -31,7 +31,7 @@ class Announcement(BaseModel, Base):
     content = Column(String(124), nullable=False)
     target = Column(String(50), nullable=False)
     date = Column(DateTime, nullable=False, default=func.now())
-    staff_id = Column(String, ForeignKey("staff.id"), nullable=False)
+    staff_id = Column(String(50), ForeignKey("staff.id"), nullable=False)
 
     def __init__(self, content, staff_id, target, *args, **kwargs):
         """

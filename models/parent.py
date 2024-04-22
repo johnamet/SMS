@@ -12,8 +12,8 @@ from models.basemodel import Base, BaseModel
 from models.basemodel import Base
 
 parent_student_association = Table('parent_student_association', Base.metadata,
-                                   Column("parent_id", String, ForeignKey('parents.id'), nullable=False),
-                                   Column("student_id", String, ForeignKey('students.id'), nullable=False))
+                                   Column("parent_id", String(50), ForeignKey('parents.id'), nullable=False),
+                                   Column("student_id", String(50), ForeignKey('students.id'), nullable=False))
 
 class Parent(BaseModel, Base):
     """
@@ -30,7 +30,7 @@ class Parent(BaseModel, Base):
 
     __tablename__ = 'parents'
 
-    id = Column(String, ForeignKey("users.id"), primary_key=True)
+    id = Column(String(50), ForeignKey("users.id"), primary_key=True)
     marital_status = Column(String(50))  # Limiting to 50 characters
     occupation = Column(String(124))  # Limiting to 124 characters
     rel_child = Column(String(50))

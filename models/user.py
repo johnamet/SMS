@@ -4,11 +4,28 @@ The user model represents a user in the system.
 """
 
 from datetime import datetime
+from hashlib import md5
 
+from bcrypt import gensalt, hashpw
 from sqlalchemy import Column, String, Boolean, Date
 from sqlalchemy.orm import relationship, validates
 
 from models.basemodel import BaseModel, Base
+
+
+def _hash_passwword(password):
+    """
+           Hashes the given password using bcrypt.
+
+           Args:
+               password (str): The password to hash.
+
+           Returns:
+               str: The hashed password.
+           """
+    salt = gensalt()
+    hashed_password = md5(password.encode('utf-8')).hexdigest()
+    return hashed_password
 
 
 class User(BaseModel, Base):
@@ -51,7 +68,7 @@ class User(BaseModel, Base):
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     email = Column(String(50), nullable=False, unique=True)
-    password = Column(String(50), nullable=False)
+    password = Column(String(128), nullable=False)
     other_names = Column(String(50))
     contact_number = Column(String(50))
     dob = Column(Date)
@@ -70,6 +87,7 @@ class User(BaseModel, Base):
         return gender
 
     def __init__(self, first_name, last_name, email, password,
+                 gender,
                  other_names=None,
                  address=None,
                  last_login_date=datetime.now(),
@@ -94,7 +112,8 @@ class User(BaseModel, Base):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.password = password
+        self.password = _hash_passwword(password)
+        self.gender = gender
         self.other_names = other_names
         self.address = address
         self.dob = dob

@@ -24,9 +24,9 @@ class Qualification(BaseModel, Base):
     """
     __tablename__ = 'qualification'
 
-    name = Column(String, nullable=False)
+    name = Column(String(50), nullable=False)
     desc = Column(String(124), nullable=False)
-    staff_id = Column(String, ForeignKey("staff.id"), nullable=False)
+    staff_id = Column(String(50), ForeignKey("staff.id"), nullable=False)
 
     def __init__(self, name, staff_id, desc, *args, **kwargs):
         """

@@ -28,12 +28,12 @@ class Attendance(BaseModel, Base):
     """
 
     __tablename__ = 'attendance'
-    class_id = Column(String, ForeignKey('classes.id'), nullable=False)
-    student_id = Column(String, ForeignKey('students.id'), nullable=False)
+    class_id = Column(String(50), ForeignKey('classes.id'), nullable=False)
+    student_id = Column(String(50), ForeignKey('students.id'), nullable=False)
     student = relationship("Student", back_populates="attendances")
     classe = relationship("Class", back_populates="attendances")
     status = Column(Integer, nullable=False)
-    term = Column(String, nullable=False)
+    term = Column(String(50), nullable=False)
 
     def __init__(self, class_id, student_id, term, status, *args, **kwargs):
         """

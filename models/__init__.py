@@ -17,10 +17,10 @@ from models.class_course_assoc import ClassCourseAssociation
 
 
 STORAGE_ENGINE = environ.get('STORAGE_ENGINE', 'db')
-#
-# if STORAGE_ENGINE == 'db':
-#     storage = DBStorage
-# else:
-#     storage = FileStorage
-#
-# storage.reload()
+
+if STORAGE_ENGINE == 'db':
+    storage = DBStorage()
+else:
+    storage = FileStorage()
+
+storage.reload()

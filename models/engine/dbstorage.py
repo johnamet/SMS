@@ -144,5 +144,5 @@ class DBStorage:
 
 
 # Instantiate the storage engine
-# dbstorage = DBStorage()
-# dbstorage.reload()
+dbstorage = DBStorage()
+dbstorage.reload()

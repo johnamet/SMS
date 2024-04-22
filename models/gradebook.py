@@ -4,7 +4,7 @@
 The script defines the Gradebook class, representing a Gradebook entry.
 """
 
-from sqlalchemy import Column, Integer, ForeignKey, CheckConstraint
+from sqlalchemy import Column, Integer, ForeignKey, CheckConstraint, String
 from sqlalchemy.orm import relationship, validates
 
 from models.basemodel import BaseModel, Base
@@ -25,9 +25,9 @@ class Gradebook(BaseModel, Base):
 
     grade = Column(Integer, CheckConstraint('grade >= 0 AND grade <= 100'),
                    nullable=False, )
-    course_id = Column(Integer, ForeignKey('courses.id'), nullable=False)
-    class_id = Column(Integer, ForeignKey('classes.id'), nullable=False)
-    student_id = Column(Integer, ForeignKey('students.id'), nullable=False)
+    course_id = Column(String(50), ForeignKey('courses.id'), nullable=False)
+    class_id = Column(String(50), ForeignKey('classes.id'), nullable=False)
+    student_id = Column(String(50), ForeignKey('students.id'), nullable=False)
 
     # Define relationships
     course = relationship("Course", back_populates="gradebooks")

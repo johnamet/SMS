@@ -11,8 +11,8 @@ from models.qualification import Qualification
 
 # Association table for the many-to-many relationship between Staff and Course
 staff_course_association = Table('staff_course_association', Base.metadata,
-    Column('staff_id', String, ForeignKey('staff.id')),
-    Column('course_id', String, ForeignKey('courses.id'))
+    Column('staff_id', String(50), ForeignKey('staff.id')),
+    Column('course_id', String(50), ForeignKey('courses.id'))
 )
 
 
@@ -45,7 +45,7 @@ class Staff(BaseModel, Base):
 
     __tablename__ = 'staff'
 
-    id = Column(String, ForeignKey("users.id"), primary_key=True)
+    id = Column(String(50), ForeignKey("users.id"), primary_key=True)
     marital_status = Column(String(50), nullable=True)
     bank_acc = Column(String(50), nullable=True)
     department = Column(String(50), nullable=True)

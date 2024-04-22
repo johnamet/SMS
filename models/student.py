@@ -33,7 +33,7 @@ class Student(User, Base):
 
     __tablename__ = 'students'
     id = Column(String(50), ForeignKey('users.id'), primary_key=True)
-    parent_id = Column(String, ForeignKey('parents.id'), nullable=False)
+    parent_id = Column(String(50), ForeignKey('parents.id'), nullable=False)
     attendances = relationship("Attendance", back_populates="student", cascade="all, delete-orphan")
     expected_graduation = Column(Date, nullable=False, default=datetime.now())
     admission_date = Column(Date, nullable=False, default=datetime.now())

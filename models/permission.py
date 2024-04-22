@@ -30,10 +30,10 @@ class Permission(BaseModel, Base):
 
     __tablename__ = 'permissions'
 
-    permission_name = Column(String, unique=True, nullable=False)
-    permission_desc = Column(String, nullable=False)
-    role_id = Column(String, ForeignKey('roles.id'), nullable=False)
-    assigned_user_id = Column(String, ForeignKey('users.id'), nullable=False)
+    permission_name = Column(String(50), unique=True, nullable=False)
+    permission_desc = Column(String(124), nullable=False)
+    role_id = Column(String(50), ForeignKey('roles.id'), nullable=False)
+    assigned_user_id = Column(String(50), ForeignKey('users.id'), nullable=False)
     access_level = Column(Integer, nullable=False, default=0)
 
     def __init__(self, permission_name, role_id, assigned_user_id, permission_desc="", access_level=0):
