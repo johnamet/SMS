@@ -4,6 +4,7 @@ The permission classes defined in this module
 """
 
 from sqlalchemy import Column, String, ForeignKey, Integer
+from sqlalchemy.orm import relationship
 
 from models.basemodel import BaseModel, Base
 from models.role import Role

@@ -12,6 +12,7 @@ from models.gradebook import Gradebook
 from models.attendance import Attendance
 from models.user import User
 # from models.parent_child_assoc import ParentChildAssociation
+from models.class_student_association import StudentClassAssociation
 
 
 class Student(User, Base):
@@ -37,7 +38,8 @@ class Student(User, Base):
     attendances = relationship("Attendance", back_populates="student", cascade="all, delete-orphan")
     expected_graduation = Column(Date, nullable=False, default=datetime.now())
     admission_date = Column(Date, nullable=False, default=datetime.now())
-    # parents = relationship("Parent", back_populates="students", cascade="all, delete-orphan")
+    class_ = relationship(StudentClassAssociation, back_populates="student")
+    parents = relationship("Parent", back_populates="students", cascade="all, delete-orphan")
     gradebooks = relationship(Gradebook,
                               back_populates='student',
                               cascade='all, delete')
@@ -48,7 +50,10 @@ class Student(User, Base):
             raise ValueError("A student must have at least one attendance record.")
         return attendance
 
-    def __init__(self, parent_id, expected_graduation: datetime, admission_date: datetime, *args, **kwargs):
+    def __init__(self,
+                 parent_id,
+                 expected_graduation: datetime,
+                 admission_date: datetime, *args, **kwargs):
         """
         Initialize a Student instance.
 
@@ -59,7 +64,7 @@ class Student(User, Base):
             *args: Additional positional arguments.
             **kwargs: Additional keyword arguments.
         """
-        super().__init__(*args, **kwargs)
+        super().__init__(password="None",*args, **kwargs)
         self.parent_id = parent_id
         self.expected_graduation = expected_graduation
         self.admission_date = admission_date

@@ -5,8 +5,9 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Base, Parent, Gradebook, Attendance
+from models import Base, Parent, Gradebook, Attendance, Staff, Class
 from models.student import Student
+from models.class_student_association import StudentClassAssociation
 
 
 class TestStudentRelationships(unittest.TestCase):
@@ -30,17 +31,38 @@ class TestStudentRelationships(unittest.TestCase):
             admission_date=datetime(2021, 9, 1)
         )
 
+        # Create staff members
+        head_teacher = Staff(id="1", first_name="John", last_name="Doe", email="john.doe@example.com")
+        assistant_teacher = Staff(id="2", first_name="Jane", last_name="Smith", email="jane.smith@example.com")
+
+        # Create a class
+        self.class1 = Class(class_name="Class 1", head_class_teacher=head_teacher.id, academic_year="2022/23",
+                       assist_class_teacher=assistant_teacher.id)
+        self.class2 = Class(class_name="Class 2", head_class_teacher=head_teacher.id, academic_year="2023/24",
+                       assist_class_teacher=assistant_teacher.id)
+
         self.parent.students.append(self.student)
 
         self.gradebook1 = Gradebook(course_id="course_1", student_id=self.student.id, grade=15, class_id="class_id")
         self.gradebook2 = Gradebook(course_id="course_2", student_id=self.student.id, grade=15, class_id="class_id")
         self.attendance1 = Attendance(date=datetime(2024, 4, 20), student_id=self.student.id,
-                                      class_id="class_id", term="Term 2", status=1)
+                                      class_id="class_id", term="Term 2", status=1, academic_year="2022/2023")
         self.attendance2 = Attendance(date=datetime(2024, 4, 21), student_id=self.student.id,
-                                      class_id="class_id", term="Term 2", status=1)
+                                      class_id="class_id", term="Term 2", status=1, academic_year="2022/2023")
+
+        a = StudentClassAssociation()
+        a1 = StudentClassAssociation()
+        a.student = self.student
+        a1.student = self.student
+
+        self.class2.students.append(a)
+        self.class1.students.append(a1)
+        # self.class2.students.append(self.student)
 
         self.session.add_all([self.parent, self.student, self.gradebook1, self.gradebook2,
-                              self.attendance1, self.attendance2])
+                              self.attendance1, self.attendance2, self.class2, self.class1, head_teacher,
+                              assistant_teacher])
+
         self.session.commit()
 
     def test_student_parent_relationship(self):
@@ -60,6 +82,12 @@ class TestStudentRelationships(unittest.TestCase):
         self.assertIn(self.attendance1, queried_student.attendances)
         self.assertIn(self.attendance2, queried_student.attendances)
 
+    def test_student_classes_relationship(self):
+        queried_class = self.session.query(Class).filter_by(class_name="Class 1").first()
+        self.assertEqual(len(queried_class.students), 1)
+        queried_student = self.session.query(Student).filter_by(id=self.student.id).first()
+        self.assertEqual(len(queried_student.class_), 2)
+
     def test_student(self):
         self.assertTrue(self.student is not None)
 
@@ -73,7 +101,7 @@ class TestStudentRelationships(unittest.TestCase):
         self.assertEqual(self.student.email, "john@example.com")
 
     def test_password(self):
-        self.assertEqual(self.student.password, "password")
+        self.assertNotEqual(self.student.password, "password")
 
     def test_parent_id(self):
         self.assertEqual(self.student.parent_id, "parent_1")

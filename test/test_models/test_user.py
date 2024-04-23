@@ -7,7 +7,7 @@ from models.user import User
 class UserModelTestCase(unittest.TestCase):
     def setUp(self):
         self.user = User("first", "last",
-                         "test@test.com", "password",)
+                         "test@test.com", "password",gender="Male")
         self.user.contact_number = []
         self.user.feedbacks = []
 
@@ -38,7 +38,7 @@ class UserModelTestCase(unittest.TestCase):
         self.assertEqual(self.user.email, "test@test.com")
 
     def test_password(self):
-        self.assertEqual(self.user.password, "password")
+        self.assertNotEqual(self.user.password, "password")
 
     def test_other_names(self):
         self.assertIsNone(self.user.other_names)

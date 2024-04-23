@@ -7,7 +7,7 @@ from datetime import datetime
 from hashlib import md5
 
 from bcrypt import gensalt, hashpw
-from sqlalchemy import Column, String, Boolean, Date
+from sqlalchemy import Column, String, Boolean, Date, ForeignKey
 from sqlalchemy.orm import relationship, validates
 
 from models.basemodel import BaseModel, Base
@@ -41,6 +41,7 @@ class User(BaseModel, Base):
         contact_number (str, optional): The contact number of the user.
         dob (Date, optional): The date of birth of the user.
         address (str, optional): The address of the user.
+        permission (Permission, optional): The permission of the user.
         gender (str, optional): The gender of the user.
         last_login_date (Date, optional): The last login date of the user.
         last_login_ip (str, optional): The last login IP address of the user.
@@ -56,6 +57,7 @@ class User(BaseModel, Base):
         contact_number (str, optional): The contact number of the user.
         dob (Date, optional): The date of birth of the user.
         address (str, optional): The address of the user.
+        permission (Permission, optional): The permission of the user.
         gender (str, optional): The gender of the user.
         last_login_date (Date, optional): The last login date of the user.
         last_login_ip (str, optional): The last login IP address of the user.
@@ -78,6 +80,8 @@ class User(BaseModel, Base):
     last_login_ip = Column(String(50))
     registration_date = Column(Date)
     is_active = Column(Boolean(), default=True)
+    # permission_id = Column(String(50), ForeignKey("permissions.id"), nullable=True)
+    # permission = relationship("Permission", back_populates="user")
     feedbacks = relationship("Feedback", backref="user", cascade="all, delete")
 
     @validates("gender")
@@ -88,6 +92,7 @@ class User(BaseModel, Base):
 
     def __init__(self, first_name, last_name, email, password,
                  gender,
+                 permission_id=None,
                  other_names=None,
                  address=None,
                  last_login_date=datetime.now(),
@@ -119,3 +124,15 @@ class User(BaseModel, Base):
         self.dob = dob
         self.last_login_date = last_login_date
         self.last_login_ip = last_login_ip
+        self.permission_id = permission_id
+
+    @classmethod
+    def get_by_email(cls, email):
+        """
+        get the user email
+        """
+        from models import storage
+
+        query = storage.get_by_filter(User, User.email == email)
+
+        return query.first()

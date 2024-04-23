@@ -88,8 +88,7 @@ class DBStorage:
                 rows = query.all()
                 all_rows.update({f"{class_name}.{row.id}": row for row in rows})
         else:
-            query = self.__session.query(cls)
-            rows = query.all()
+            rows = self.__session.query(cls).all()
             all_rows.update({f"{cls.__name__}.{row.id}": row for row in rows})
 
         return all_rows
@@ -103,10 +102,16 @@ class DBStorage:
         if obj:
             self.__session.add(obj)
 
-    def save(self):
+        if self.__session.dirty is not None:
+            self.save()
+
+    def save(self, obj=None):
         """
         Save all records in the database.
         """
+        if obj is not None:
+            self.new(obj)
+
         self.__session.commit()
 
     def delete(self, obj):
@@ -116,6 +121,19 @@ class DBStorage:
             obj (object): the object to delete.
         """
         self.__session.delete(obj)
+        self.__session.commit()
+
+    def delete_by_id(self, cls, id_):
+        """
+        Delete an object from the database.
+        Args:
+            cls (class): the class to delete.
+            id_ (str): the id of the object to delete.
+        """
+        (self.__session.query(cls)
+         .filter(cls.id == id_).delete())
+        self.__session.commit()
+
 
     def reload(self):
         """
@@ -124,7 +142,7 @@ class DBStorage:
         self.__session.close()
         self.__session = self.__Session()
 
-    def get(self, cls, id):
+    def get_by_id(self, cls, id):
         """
         Get an object from the database.
         Args:
@@ -135,6 +153,29 @@ class DBStorage:
         if query is None:
             return None
         return query.first()
+
+    def query(self, cls):
+        """
+        Query all records in the database.
+        Args:
+            cls (class): the class to query.
+        """
+        return self.__session.query(cls)
+
+    def get_by_filter(self, cls, filter_):
+        """
+        Get an object from the database.
+        Args:
+            cls (class): the class to query.
+            filter_ (condition): the filter to query.
+
+        Returns:
+            object: the filtered object.
+        """
+
+        query = self.__session.query(cls).filter(filter_)
+
+        return query
 
     def close(self):
         """

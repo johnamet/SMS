@@ -6,6 +6,7 @@ This module defines the Class model, representing a class in the school system.
 
 from models.basemodel import BaseModel
 from models.class_course_assoc import ClassCourseAssociation
+from models.class_student_association import StudentClassAssociation
 
 # !/usr/bin/python3
 
@@ -59,7 +60,12 @@ class Class(BaseModel, Base):
     academic_year = Column(String(50), nullable=False)
     assist_class_teacher = Column(String(50), ForeignKey("staff.id"))
     courses = relationship(ClassCourseAssociation, back_populates="classe")
-    attendances = relationship("Attendance", back_populates="classe", cascade="all, delete-orphan")
+    students = relationship(StudentClassAssociation, back_populates="class_")
+    attendances = relationship("Attendance", back_populates="classe",
+                               cascade="all, delete-orphan")
+    # students = relationship("Student", backref="classe",
+    #                         cascade="all, delete-orphan")
+
     gradebooks = relationship("Gradebook", back_populates="classe")
 
     def __init__(self, class_name, head_class_teacher,

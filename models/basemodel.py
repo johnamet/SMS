@@ -9,7 +9,6 @@ from uuid import uuid4
 
 from sqlalchemy import Column, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -101,22 +100,19 @@ class BaseModel:
         instance = cls(**obj)
         return instance
 
-    def save(self, session):
+    def save(self):
         """
-        Save the Model instance to the database.
+        Save the Model instance to the storage.
 
-        Args:
-            session: The SQLAlchemy session object.
 
         Returns:
             bool: True if successfully saved, False otherwise.
         """
+        from models import storage
         try:
-            session.add(self)
-            session.commit()
+            storage.save(self)
             return True
-        except IntegrityError as e:
-            session.rollback()
+        except Exception as e:
             print(f"Error saving Model: {e}")
             return False
 

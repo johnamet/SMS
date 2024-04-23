@@ -15,6 +15,7 @@ parent_student_association = Table('parent_student_association', Base.metadata,
                                    Column("parent_id", String(50), ForeignKey('parents.id'), nullable=False),
                                    Column("student_id", String(50), ForeignKey('students.id'), nullable=False))
 
+
 class Parent(BaseModel, Base):
     """
     The Parent model represents a parent entity.
