@@ -7,7 +7,7 @@ from datetime import datetime
 from sqlalchemy import Column, String, ForeignKey, DateTime, Date
 from sqlalchemy.orm import relationship, validates
 
-from models.basemodel import Base
+from models.basemodel import Base, BaseModel
 from models.gradebook import Gradebook
 from models.attendance import Attendance
 from models.user import User
@@ -15,7 +15,7 @@ from models.user import User
 from models.class_student_association import StudentClassAssociation
 
 
-class Student(User, Base):
+class Student(BaseModel, Base):
     """
     Student Model represents a student in the system.
 
@@ -33,13 +33,17 @@ class Student(User, Base):
     """
 
     __tablename__ = 'students'
-    id = Column(String(50), ForeignKey('users.id'), primary_key=True)
+    first_name = Column(String(50), nullable=False)
+    last_name = Column(String(50), nullable=False)
+    other_names = Column(String(50))
+    dob = Column(Date)
+    gender = Column(String(50), nullable=False)
     parent_id = Column(String(50), ForeignKey('parents.id'), nullable=False)
     attendances = relationship("Attendance", back_populates="student", cascade="all, delete-orphan")
     expected_graduation = Column(Date, nullable=False, default=datetime.now())
     admission_date = Column(Date, nullable=False, default=datetime.now())
     class_ = relationship(StudentClassAssociation, back_populates="student")
-    parents = relationship("Parent", back_populates="students", cascade="all, delete-orphan")
+    parents = relationship("Parent", back_populates="students")
     gradebooks = relationship(Gradebook,
                               back_populates='student',
                               cascade='all, delete')
@@ -50,10 +54,21 @@ class Student(User, Base):
             raise ValueError("A student must have at least one attendance record.")
         return attendance
 
+    @validates("gender")
+    def validate_gender(self, key, gender):
+        if gender.lower() not in ["male", "female"]:
+            raise ValueError("Gender must be either male or female")
+        return gender
+
     def __init__(self,
+                 first_name,
+                 last_name,
+                 dob,
+                 gender,
                  parent_id,
                  expected_graduation: datetime,
-                 admission_date: datetime, *args, **kwargs):
+                 admission_date: datetime,
+                 other_names=None,*args, **kwargs):
         """
         Initialize a Student instance.
 
@@ -64,7 +79,12 @@ class Student(User, Base):
             *args: Additional positional arguments.
             **kwargs: Additional keyword arguments.
         """
-        super().__init__(password="None",*args, **kwargs)
+        super().__init__(*args, **kwargs)
+        self.first_name = first_name
+        self.last_name = last_name
+        self.other_names = other_names
+        self.dob = dob
+        self.gender = gender
         self.parent_id = parent_id
         self.expected_graduation = expected_graduation
         self.admission_date = admission_date

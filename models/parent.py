@@ -36,7 +36,7 @@ class Parent(BaseModel, Base):
     occupation = Column(String(124))  # Limiting to 124 characters
     rel_child = Column(String(50))
     partner = Column(String(50))
-    students = relationship("Student", secondary=parent_student_association, backref="parents")
+    students = relationship("Student", secondary=parent_student_association, back_populates="parents")
 
     def __init__(self, parent_id, marital_status=None, occupation=None, **kwargs):
         """
