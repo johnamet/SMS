@@ -1,0 +1,30 @@
+:root {
+    --blue: #0066EB;
+    --indigo: #6610f2;
+    --purple: #6f42c1;
+    --red: #F54B5E;
+    --yellow: #F8C51C;
+    --green: #00caac;
+    --white: #fff;
+    --primary: #0066EB;
+    --secondary: #DEE4E8;
+    --success: #00caac;
+    --info: #51CAE3;
+    --warning: #ff5723;
+    --danger: #F54B5E;
+    --dark: #131316;
+    --breakpoint-xs: 0;
+    --breakpoint-sm: 576px;
+    --breakpoint-md: 768px;
+    --breakpoint-lg: 992px;
+    --breakpoint-xl: 1200px;
+    --font-family-sans-serif: sans-serif;
+    --font-family-monospace: "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+}
+* {
+    font-family: "Segoe UI";
+    font-size: 16px !important;
+    font-weight: 100 !important;
+    box-sizing: border-box;
+}
