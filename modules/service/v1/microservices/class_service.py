@@ -1,61 +1,72 @@
+#!/usr/bin/python3
+
+"""
+Class Management Module
+
+This module provides functionality for managing classes in the school system,
+including marking attendance, retrieving class information, enrolling and
+unenrolling students, and more.
+"""
+
 from flask import jsonify, request, abort, make_response
 
+from models import Class
+from modules.class_management.class_management import ClassManagement
 from modules.service.v1.microservices import services
-from modules.course_management.course_management import CourseManagement
 
-course_management = CourseManagement()
+class_management = ClassManagement()
 
 
-@services.route('/courses', methods=['GET'], strict_slashes=False)
-def get_all_courses():
+@services.route('/classes', methods=['GET'], strict_slashes=False)
+def get_all_classes():
     """
-    Retrieves information about all courses.
+    Retrieves information about all classes.
 
     Returns:
-        JSON: Information about all courses.
+        JSON: Information about all classes.
     """
     try:
-        courses, msg = course_management.get_courses()
-        course_dict = {course.id: course.serialize() for course in courses}
+        classes, msg = class_management.get_classes()
+        class_dict = {class_.id: class_.serialize() for class_ in classes}
         result = {
             "status_msg": msg,
-            "courses": course_dict
+            "classes": class_dict
         }
         return make_response(jsonify(result), 200)
     except Exception as e:
         abort(500)
 
 
-@services.route("/courses/<course_id>", methods=["GET"], strict_slashes=False)
-def get_course(course_id):
+@services.route("/classes/<class_id>", methods=["GET"], strict_slashes=False)
+def get_class(class_id):
     """
-    Retrieves information about a specific course.
+    Retrieves information about a specific class.
 
     Args:
-        course_id (str): ID of the course.
+        class_id (str): ID of the class.
 
     Returns:
-        JSON: Information about the specified course.
+        JSON: Information about the specified class.
     """
     try:
-        if not course_id:
-            abort(400, "Course ID cannot be empty")
+        if not class_id:
+            abort(400, "Class ID cannot be empty")
 
-        course, msg = course_management.get_course_details(course_id)
-        if course:
-            return jsonify({course_id: course, "status_msg": msg}), 200
+        class_, msg = class_management.get_class_details(class_id)
+        if class_:
+            return jsonify({class_id: class_, "status_msg": msg}), 200
         else:
-            abort(404, "Course not found")
+            abort(404, "Class not found")
     except ValueError as ve:
         abort(400, str(ve))
     except Exception as e:
         abort(500)
 
 
-@services.route('/courses', methods=['POST'], strict_slashes=False)
-def create_course():
+@services.route('/classes', methods=['POST'], strict_slashes=False)
+def create_class():
     """
-    Creates a new course.
+    Creates a new class.
 
     Returns:
         JSON: Message indicating success or failure of the operation.
@@ -65,10 +76,21 @@ def create_course():
         if not data:
             abort(400, "Request body cannot be empty")
 
-        course, message = course_management.create_course(data)
+        class_name = data.get('class_name')
+        head_class_teacher = data.get('head_class_teacher')
+        academic_year = data.get('academic_year')
+        courses_list = data.get('courses_list')
+        assist_class_teacher = data.get('assist_class_teacher')
+        students_list = data.get('students_list')
 
-        if course:
-            return jsonify({"course": course.serialize(), "message": message}), 201
+        if not class_name or not head_class_teacher or not academic_year or not courses_list:
+            abort(400, "Class name, head class teacher, academic year, and courses list are required")
+
+        success, message = class_management.create_class(class_name, head_class_teacher, academic_year,
+                                                          courses_list, assist_class_teacher, students_list)
+
+        if success:
+            return jsonify({"message": message}), 201
         else:
             abort(400, message)
     except ValueError as ve:
@@ -77,26 +99,26 @@ def create_course():
         abort(500, f"Internal Server Error: {str(e)}")
 
 
-@services.route("/courses/<course_id>", methods=["PUT"], strict_slashes=False)
-def update_course(course_id):
+@services.route("/classes/<class_id>", methods=["PUT"], strict_slashes=False)
+def update_class(class_id):
     """
-    Updates information about a specific course.
+    Updates information about a specific class.
 
     Args:
-        course_id (str): ID of the course.
+        class_id (str): ID of the class.
 
     Returns:
         JSON: Message indicating success or failure of the operation.
     """
     try:
-        if not course_id:
-            abort(400, "Course ID cannot be empty")
+        if not class_id:
+            abort(400, "Class ID cannot be empty")
 
         data = request.get_json()
         if not data:
             abort(400, "Request body cannot be empty")
 
-        success, message = course_management.update_course(course_id, **data)
+        success, message = class_management.update_class(class_id, **data)
 
         if success:
             return make_response(jsonify({"message": message}), 200)
@@ -108,48 +130,24 @@ def update_course(course_id):
         abort(500, f"Internal Server Error: {str(e)}")
 
 
-@services.route("/courses/<course_id>", methods=["DELETE"], strict_slashes=False)
-def delete_course(course_id):
+@services.route("/classes/<class_id>", methods=["DELETE"], strict_slashes=False)
+def delete_class(class_id):
     """
-    Deletes a specific course.
+    Deletes a specific class.
 
     Args:
-        course_id (str): ID of the course.
+        class_id (str): ID of the class.
 
     Returns:
         JSON: Message indicating success or failure of the operation.
     """
     try:
-        if not course_id:
-            abort(400, "Course ID cannot be empty")
+        if not class_id:
+            abort(400, "Class ID cannot be empty")
 
-        success, message = course_management.delete_course(course_id)
-        if success:
-            return jsonify({"message": message}), 200
-        else:
-            abort(404, message)
+        class_management.delete_class(class_id)
+        return jsonify({"message": "Class deleted successfully"}), 200
     except ValueError as ve:
         abort(400, str(ve))
     except Exception as e:
         abort(500, f"Internal Server Error: {str(e)}")
-
-
-# Endpoint to get courses by teacher
-@services.route('/courses/teacher/<teacher_id>', methods=['GET'])
-def get_courses_by_teacher(teacher_id):
-    courses, message = course_management.get_courses_by_teacher(teacher_id)
-    if courses:
-        serialized_courses = [course.serialize() for course in courses]
-        return jsonify({'courses': serialized_courses, 'message': message}), 200
-    else:
-        return jsonify({'error': message}), 404
-
-
-# Endpoint to associate a course with a class
-@services.route('/courses/<course_id>/associate_class/<class_id>', methods=['POST'])
-def associate_course_with_class(course_id, class_id):
-    success, message = course_management.associate_course_with_class(course_id, class_id)
-    if success:
-        return jsonify({'message': message}), 200
-    else:
-        return jsonify({'error': message}), 400
