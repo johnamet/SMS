@@ -14,7 +14,7 @@ from models.staff import Staff
 from models.student import Student
 from models.user import User
 from models.class_course_assoc import ClassCourseAssociation
-
+from models.class_student_association import StudentClassAssociation
 
 STORAGE_ENGINE = environ.get('STORAGE_ENGINE', 'db')
 

@@ -9,6 +9,7 @@ import random
 
 from models import Class, Student, User, Staff, Parent, Course, storage
 from modules.class_management.class_management import ClassManagement
+from modules.test_utils import populate_db
 
 
 class ClassManagementTestCase(unittest.TestCase):
@@ -70,9 +71,7 @@ class ClassManagementTestCase(unittest.TestCase):
         # Test student enrollment
         for student in students:
             if storage.get_by_id(Student, student.id):
-                print(student.id)
                 (enrol, msg) = self.class_management.enroll_student(new_class.id, student.id)
-                print(msg)
 
         fetched_class = storage.get_by_id(Class, new_class.id)
         fetched_students = fetched_class.students
@@ -114,6 +113,13 @@ class ClassManagementTestCase(unittest.TestCase):
         fetched_class = self.class_management.get_class(class_id=new_class.id)
 
         self.assertIsNotNone(fetched_class)
+
+    def test_get_class_details(self):
+        class_id = populate_db()
+
+        result, msg = self.class_management.get_class_details(class_id=class_id)
+        self.assertIsNotNone(result)
+        self.assertIsInstance(result, dict)
 
 
 if __name__ == '__main__':
