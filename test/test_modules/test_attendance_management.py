@@ -34,7 +34,8 @@ class TestAttendanceManagement(unittest.TestCase):
         students = []
         for _ in range(50):
             student = Student(first_name=self.faker.first_name(), last_name=self.faker.last_name(),
-                              email=self.faker.email(), class_id=class_id, parent_id=parent_id,
+                              dob=self.faker.date_between(start_date='-25y', end_date='-25y'),
+                              class_id=class_id, parent_id=parent_id,
                               expected_graduation=self.faker.date_time(),
                               gender=random.choice(["Male", "Female"]),
                               admission_date=datetime.now())

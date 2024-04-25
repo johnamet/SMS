@@ -9,6 +9,7 @@ unenrolling students, and more.
 """
 
 from models import Class, storage, Student, ClassCourseAssociation, Course
+from modules import class_management
 from modules.attendance_tracking.attendance_management import AttendanceManagement
 from models.class_student_association import StudentClassAssociation
 
@@ -27,6 +28,7 @@ class ClassManagement:
         """
         self.class_id = class_id
         self._class = None
+        self.term = None
         self._attendance_management = None
 
     @property
@@ -71,44 +73,8 @@ class ClassManagement:
         """
         if self.class_id:
             self._attendance_management = AttendanceManagement(class_id=self._class.id,
-                                                               term=self._class.term,
+                                                               term=self.term,
                                                                academic_year=self._class.academic_year)
-
-    def mark_class_attendance(self, present, absent, class_id=None):
-        """
-        Mark class attendance as present or absent.
-
-        Args:
-            present (list): List of student IDs of students present.
-            absent (list): List of student IDs of students absent.
-            class_id (int, optional): The ID of the class. Defaults to None.
-
-        Returns:
-            tuple: A tuple indicating the success status and a message.
-        """
-        try:
-            if not self.class_id and class_id is None:
-                raise ValueError('class_id cannot be None')
-
-            if not self.class_id and class_id is not None:
-                self.class_id = class_id
-
-            if self._class:
-                attendances = []
-                for student_id in present:
-                    attendance = self._attendance_management.create_attendance(student_id, 1)
-                    attendances.append(attendance)
-
-                for student_id in absent:
-                    attendance = self._attendance_management.create_attendance(student_id, 0)
-                    attendances.append(attendance)
-
-                self._attendance_management.mark_attendance(attendances=attendances)
-                return True, "Marked today's class attendance"
-            else:
-                return False, "Could not find class with class id"
-        except Exception as e:
-            return False, f"Error marking attendance: {str(e)}"
 
     def get_students(self, class_id=None):
         """
@@ -128,8 +94,7 @@ class ClassManagement:
                 self.class_id = class_id
                 self.__init__(self.class_id)
 
-            students_id = self._class.students
-            return [storage.get_by_id(Student, student_id) for student_id in students_id]
+            return self._class.students
         except Exception as e:
             return [], f"Error getting students: {str(e)}"
 
@@ -186,6 +151,26 @@ class ClassManagement:
 
     # Implement methods for enrollment, unenrollment, and class creation
 
+    def get_class(self, class_id=None):
+        """
+        Get a class by id
+
+        Args:
+            class_id (str, optional): The ID of the class to query
+
+        Returns:
+            Class: The class object.
+        """
+        if self.class_id is None and class_id:
+            self.class_id = class_id
+
+        if self.class_id:
+            class_ = storage.get_by_id(Class, self.class_id)
+        else:
+            raise(Exception("Class id cannot be None"))
+
+        return class_
+
     def enroll_student(self, class_id=None, student_id=None):
         """
         Enroll a student in the class.
@@ -198,23 +183,29 @@ class ClassManagement:
             tuple: A tuple indicating the success status and a message.
         """
         try:
+            class_ = None
+
             if not self.class_id and class_id is not None:
                 self.class_id = class_id
-                self.__init__(self.class_id)
 
             if not self.class_id and class_id is None:
                 raise ValueError('class_id cannot be None')
 
             student = storage.get_by_id(Student, student_id)
 
-            if student:
-                association = StudentClassAssociation()
-                association.student = student
-                self._class.students.append(association)
-                storage.save()
-                return True, "Student enrolled successfully"
+            if student is not None:
+                class_ = self.get_class(class_id)
+                if class_:
+                    association = StudentClassAssociation(class_id=class_id,)
+                    association.student = student
+                    class_.students.append(association)
+                else:
+                    return False, f"Class with id {class_.id} not found"
+
+                class_.save()
+                return True, f"Student {student.first_name} enrolled successfully"
             else:
-                return False, "Student not found"
+                return False, f"Student with id {student_id} not found"
         except Exception as e:
             return False, f"Error enrolling student: {str(e)}"
 
@@ -243,7 +234,8 @@ class ClassManagement:
                 association.student = student
                 self._class.students.remove(association)
                 storage.save()
-                return True, "Student unenrolled successfully"
+                return (storage.get_by_id(Student, student_id) is None,
+                        "Student unenrolled successfully")
             else:
                 return False, "Student not found"
         except Exception as e:
@@ -289,12 +281,16 @@ class ClassManagement:
                     class_.students.append(association)
 
         if courses_list:
-            for course in courses_list:
-                association = ClassCourseAssociation()
-                association.course = course
-                class_.courses.append(association)
+            if self._validate_courses_list(courses_list):
+                for course in courses_list:
+                    association = ClassCourseAssociation()
+                    association.course = course
+                    class_.courses.append(association)
+            else:
+                raise ValueError("courses_list contains or is invalid.")
         try:
             storage.save(class_)
-            return True, "Class successfully created"
+            return (storage.get_by_id(Class, class_.id) is not None,
+                    "Class successfully created")
         except Exception as e:
             return False, f"Error creating class: {str(e)}"

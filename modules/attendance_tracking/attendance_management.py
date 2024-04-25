@@ -50,6 +50,8 @@ class AttendanceManagement:
         if self.term:
             query = query.filter(Attendance.term == self.term)
 
+        if kwargs and "id" in kwargs:
+            query = query.filter(Attendance.id == kwargs["id"])
         if kwargs and "sort" in kwargs:
             if kwargs["sort"] == "asc":
                 query = query.order_by(asc(Attendance.created_at))

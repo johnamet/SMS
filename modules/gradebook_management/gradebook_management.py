@@ -6,7 +6,7 @@ This module provides functionality for managing gradebooks in the school system.
 """
 
 from collections import defaultdict
-from models import Gradebook, storage
+from models import Grade, storage
 
 class GradebookManagement:
     """
@@ -27,7 +27,7 @@ class GradebookManagement:
         Create a new gradebook.
 
         Args:
-            grade (Gradebook): Gradebook to create.
+            grade (Grade): Gradebook to create.
 
         Returns:
             tuple: A tuple indicating the success status and a message.
@@ -47,9 +47,9 @@ class GradebookManagement:
             gradebook_id (int): The ID of the gradebook to retrieve.
 
         Returns:
-            Gradebook: The gradebook object if found, None otherwise.
+            Grade: The gradebook object if found, None otherwise.
         """
-        return storage.get(Gradebook, gradebook_id)
+        return storage.get(Grade, gradebook_id)
 
     def update_gradebook(self, gradebook_id, **kwargs):
         """
@@ -63,7 +63,7 @@ class GradebookManagement:
             tuple: A tuple indicating the success status and a message.
         """
         try:
-            gradebook = storage.get(Gradebook, gradebook_id)
+            gradebook = storage.get(Grade, gradebook_id)
             if gradebook:
                 gradebook.update(**kwargs)
                 gradebook.save()
@@ -107,7 +107,7 @@ class GradebookManagement:
             dict: A nested dictionary where keys represent the group_by attributes and values are nested dictionaries or lists of gradebook objects.
         """
         try:
-            gradebooks = storage.query(Gradebook).filter(Gradebook.class_id == class_id).all()
+            gradebooks = storage.query(Grade).filter(Grade.class_id == class_id).all()
             return self._group_gradebooks(gradebooks, group_by)
         except Exception as e:
             return {}, f"Failed to get class gradebook: {e}"
@@ -124,7 +124,7 @@ class GradebookManagement:
             dict: A nested dictionary where keys represent the group_by attributes and values are nested dictionaries or lists of gradebook objects.
         """
         try:
-            gradebooks = storage.query(Gradebook).filter(Gradebook.student_id == student_id).all()
+            gradebooks = storage.query(Grade).filter(Grade.student_id == student_id).all()
             return self._group_gradebooks(gradebooks, group_by)
         except Exception as e:
             return {}, f"Failed to get student gradebook: {e}"
@@ -140,7 +140,7 @@ class GradebookManagement:
             tuple: A tuple indicating the success status and a message.
         """
         try:
-            storage.delete_by_id(Gradebook, gradebook_id)
+            storage.delete_by_id(Grade, gradebook_id)
             return True, "Gradebook deleted successfully."
         except Exception as e:
             return False, f"Failed to delete gradebook: {e}"

@@ -19,7 +19,7 @@ class TestParentModel(unittest.TestCase):
         Base.metadata.create_all(engine)
 
         self.user = User("John", "Ametepe",
-                         "john@gmail.com", "password")
+                         "john@gmail.com", "password",gender="Male")
         self.parent = Parent(
             parent_id=self.user.id,
             marital_status="Married",
@@ -62,7 +62,7 @@ class TestParentModel(unittest.TestCase):
                         other_names="Ametepe", gender="Male",
                         expected_graduation=datetime(year=2019, month=1, day=1),
                         admission_date=datetime(year=2019, month=1, day=1),
-                        parent_id=self.user.id)
+                        parent_id=self.user.id, dob=datetime(year=2019, month=1, day=1),)
         parent = Parent(
             parent_id=self.user.id,
             marital_status="Married",
@@ -86,13 +86,13 @@ class TestParentModel(unittest.TestCase):
                          other_names="Ametepe", gender="Male",
                          expected_graduation=datetime(year=2019, month=1, day=1),
                          admission_date=datetime(year=2019, month=1, day=1),
-                         parent_id=self.user.id)
+                         parent_id=self.user.id, dob=datetime(year=2019, month=1, day=1),)
         child2 = Student(first_name="Jane", last_name="Doe", email="janedoe@localhost",
                          password="**HASHED_PASSWORD**",  # Use a secure hashing algorithm
                          other_names="Ametepe", gender="Female",
                          expected_graduation=datetime(year=2019, month=1, day=1),
                          admission_date=datetime(year=2019, month=1, day=1),
-                         parent_id=self.user.id)
+                         parent_id=self.user.id,dob=datetime(year=2019, month=1, day=1),)
 
         parent = Parent(
             parent_id=self.user.id,

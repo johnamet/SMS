@@ -10,12 +10,13 @@ from sqlalchemy.orm import relationship, validates
 from models.basemodel import BaseModel, Base
 
 
-class Gradebook(BaseModel, Base):
+class Grade(BaseModel, Base):
     """
     The Gradebook class represents a Gradebook entry.
 
     Attributes:
         grade (int): The grade of the gradebook entry.
+        out_of (int): The total grade or expected grade.
         course_id (int): The ID of the course associated with the gradebook entry.
         class_id (int): The ID of the class associated with the gradebook entry.
         student_id (int): The ID of the student associated with the gradebook entry.
@@ -27,6 +28,8 @@ class Gradebook(BaseModel, Base):
 
     grade = Column(Integer, CheckConstraint('grade >= 0 AND grade <= 100'),
                    nullable=False, )
+    out_of = Column(Integer, CheckConstraint('grade >= 0 AND grade <= 100 AND grade <= out_of'),
+                    nullable=False, )
     grade_desc = Column(String(50), nullable=True)
     term = Column(String(50), nullable=True)
     course_id = Column(String(50), ForeignKey('courses.id'), nullable=False)
@@ -55,12 +58,15 @@ class Gradebook(BaseModel, Base):
     def __init__(self, grade,
                  grade_desc,
                  term,
-                 course_id, class_id, student_id, *args, **kwargs):
+                 course_id, class_id, student_id,
+                 out_of=10,
+                 *args, **kwargs):
         """
         Initialize a Gradebook instance.
 
         Args:
             grade (int): The grade of the gradebook entry.
+            out_of (int): The total grade or expected grade.
             grade_desc (str): The description of the gradebook entry. e.g. homework, classwork, etc.
             term (str): The academic term the gradebook entry belongs to e.g. term 1, term 2, first semester.
             course_id (str): The ID of the course associated with the gradebook entry.
@@ -76,3 +82,4 @@ class Gradebook(BaseModel, Base):
         self.course_id = course_id
         self.class_id = class_id
         self.student_id = student_id
+        self.out_of = out_of

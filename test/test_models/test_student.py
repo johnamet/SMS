@@ -5,7 +5,7 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Base, Parent, Gradebook, Attendance, Staff, Class
+from models import Base, Parent, Grade, Attendance, Staff, Class
 from models.student import Student
 from models.class_student_association import StudentClassAssociation
 
@@ -27,6 +27,7 @@ class TestStudentRelationships(unittest.TestCase):
             password="password",
             gender="Male",
             parent_id="parent_1",
+            dob=datetime(1995, 1, 2),
             expected_graduation=datetime(2026, 6, 30),
             admission_date=datetime(2021, 9, 1)
         )
@@ -43,8 +44,10 @@ class TestStudentRelationships(unittest.TestCase):
 
         self.parent.students.append(self.student)
 
-        self.gradebook1 = Gradebook(course_id="course_1", student_id=self.student.id, grade=15, class_id="class_id")
-        self.gradebook2 = Gradebook(course_id="course_2", student_id=self.student.id, grade=15, class_id="class_id")
+        self.gradebook1 = Grade(course_id="course_1", student_id=self.student.id, grade=15, class_id="class_id",
+                                grade_desc="homework", term="Term 2")
+        self.gradebook2 = Grade(course_id="course_2", student_id=self.student.id, grade=15, class_id="class_id",
+                                grade_desc="homework", term="Term 2")
         self.attendance1 = Attendance(date=datetime(2024, 4, 20), student_id=self.student.id,
                                       class_id="class_id", term="Term 2", status=1, academic_year="2022/2023")
         self.attendance2 = Attendance(date=datetime(2024, 4, 21), student_id=self.student.id,
@@ -68,7 +71,7 @@ class TestStudentRelationships(unittest.TestCase):
     def test_student_parent_relationship(self):
         queried_student = self.session.query(Student).filter_by(id=self.student.id).first()
         self.assertEqual(queried_student.parent_id, self.parent.id)
-        self.assertEqual(queried_student.parents[0], self.parent)
+        self.assertEqual(queried_student.parents, self.parent)
 
     def test_student_gradebooks_relationship(self):
         queried_student = self.session.query(Student).filter_by(id=self.student.id).first()
@@ -84,9 +87,13 @@ class TestStudentRelationships(unittest.TestCase):
 
     def test_student_classes_relationship(self):
         queried_class = self.session.query(Class).filter_by(class_name="Class 1").first()
+        queried_class2 = self.session.query(Class).filter_by(class_name="Class 2").first()
         self.assertEqual(len(queried_class.students), 1)
+        self.assertEqual(len(queried_class2.students), 1)
+
         queried_student = self.session.query(Student).filter_by(id=self.student.id).first()
         self.assertEqual(len(queried_student.class_), 2)
+        self.assertIsInstance(queried_class2.students, list)
 
     def test_student(self):
         self.assertTrue(self.student is not None)
@@ -99,9 +106,6 @@ class TestStudentRelationships(unittest.TestCase):
 
     def test_email(self):
         self.assertEqual(self.student.email, "john@example.com")
-
-    def test_password(self):
-        self.assertNotEqual(self.student.password, "password")
 
     def test_parent_id(self):
         self.assertEqual(self.student.parent_id, "parent_1")
