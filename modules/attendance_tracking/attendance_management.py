@@ -39,26 +39,39 @@ class AttendanceManagement:
         Get attendance records based on the provided filters.
 
         Returns:
-            list: List of attendance records.
+            tuple: A tuple containing a list of attendance records and a message.
         """
-        query = storage.query(Attendance)
-        if self.class_id and self.academic_year:
-            class_ = storage.get(Class, self.class_id)
-            query = query.filter(Attendance.class_id == class_.id,
-                                 Class.academic_year == self.academic_year)
+        try:
+            query = storage.query(Attendance)
+            print(query.all())
+            if self.class_id:
+                class_ = storage.get(Class, self.class_id)
+                if class_:
+                    query = query.filter(Attendance.class_id == class_.id,
+                                         Class.academic_year == self.academic_year)
+                else:
+                    raise ValueError(f"Class with id {self.class_id} was not found.")
 
-        if self.term:
-            query = query.filter(Attendance.term == self.term)
+            if self.academic_year:
+                query = query.filter(Attendance.academic_year == self.academic_year)
+                print(query.all())
 
-        if kwargs and "id" in kwargs:
-            query = query.filter(Attendance.id == kwargs["id"])
-        if kwargs and "sort" in kwargs:
-            if kwargs["sort"] == "asc":
-                query = query.order_by(asc(Attendance.created_at))
-            else:
-                query = query.order_by(desc(Attendance.updated_at))
+            if self.term:
+                query = query.filter(Attendance.term == self.term)
 
-        return query.all()
+            if kwargs and "id" in kwargs:
+                query = query.filter(Attendance.id == kwargs["id"])
+
+            if kwargs and "sort" in kwargs:
+                if kwargs["sort"] == "asc":
+                    query = query.order_by(asc(Attendance.date))
+                else:
+                    query = query.order_by(desc(Attendance.date))
+
+            attendances = query.all()
+            return attendances, "Attendance records fetched successfully."
+        except Exception as e:
+            return [], f"Failed to fetch attendance records: {str(e)}"
 
     def get_attendance_by_class_id(self, class_id):
         """
@@ -68,9 +81,13 @@ class AttendanceManagement:
             class_id (str): The ID of the class.
 
         Returns:
-            list: List of attendance records.
+            tuple: A tuple containing a list of attendance records and a message.
         """
-        return storage.query(Attendance).filter(Attendance.class_id == class_id).all()
+        try:
+            attendances = storage.query(Attendance).filter(Attendance.class_id == class_id).all()
+            return attendances, "Attendance records fetched successfully."
+        except Exception as e:
+            return [], f"Failed to fetch attendance records: {str(e)}"
 
     def get_attendance_by_term(self, term):
         """
@@ -80,9 +97,13 @@ class AttendanceManagement:
             term (str): The term.
 
         Returns:
-            list: List of attendance records.
+            tuple: A tuple containing a list of attendance records and a message.
         """
-        return storage.all(Attendance).filter(Attendance.term == term).all()
+        try:
+            attendances = storage.query(Attendance).filter(Attendance.term == term).all()
+            return attendances, "Attendance records fetched successfully."
+        except Exception as e:
+            return [], f"Failed to fetch attendance records: {str(e)}"
 
     def get_student_attendance(self, student_id):
         """
@@ -92,11 +113,15 @@ class AttendanceManagement:
             student_id (str): The ID of the student.
 
         Returns:
-            list: List of attendance records.
+            tuple: A tuple containing a list of attendance records and a message.
         """
-        return storage.query(Attendance).filter(Attendance.student_id == student_id).all()
+        try:
+            attendances = storage.query(Attendance).filter(Attendance.student_id == student_id).all()
+            return attendances, "Attendance records fetched successfully."
+        except Exception as e:
+            return [], f"Failed to fetch attendance records: {str(e)}"
 
-    def create_attendance(self, student_id, status):
+    def create_attendance(self, student_id, status, **kwargs):
         """
         Create a new attendance record.
 
@@ -105,18 +130,20 @@ class AttendanceManagement:
             status (int): The attendance status (1 == 'present' or 0 =='absent').
 
         Returns:
-            Attendance: The created attendance record.
+            tuple: A tuple containing the created attendance record and a message.
         """
         if self.class_id is None or self.academic_year is None or self.term is None:
-            raise ValueError("Attendance management module requires class_id, academic_year and term to be set.")
-
-        attendance = Attendance(student_id=student_id,
-                                class_id=self.class_id,
-                                academic_year=self.academic_year,
-                                term=self.term,
-                                status=status)
-        storage.save(attendance)
-        return attendance
+            raise ValueError("Attendance management module requires class_id, academic_year, and term to be set.")
+        try:
+            attendance = Attendance(student_id=student_id,
+                                    class_id=self.class_id,
+                                    academic_year=self.academic_year,
+                                    term=self.term,
+                                    status=status, **kwargs)
+            storage.save(attendance)
+            return attendance, "Attendance created successfully"
+        except Exception as e:
+            return None, f"Failed to create attendance record: {str(e)}"
 
     def mark_attendance(self, attendances):
         """
@@ -126,8 +153,7 @@ class AttendanceManagement:
             attendances (list): List of attendance records to mark.
 
         Returns:
-            bool: True if marking attendance was successful, False otherwise.
-            str: Message indicating the result of marking attendance.
+            tuple: A tuple containing a boolean indicating success and a message.
         """
         try:
             for attendance in attendances:
@@ -145,14 +171,16 @@ class AttendanceManagement:
             **kwargs: Keyword arguments for fields to update.
 
         Returns:
-            bool: True if updating attendance was successful, False otherwise.
-            str: Message indicating the result of updating attendance.
+            tuple: A tuple containing a boolean indicating success and a message.
         """
-        attendance = storage.get_by_id(Attendance, attendance_id)
-        if attendance:
-            for key, value in kwargs.items():
-                setattr(attendance, key, value)
-            storage.save()
-            return True, "Attendance updated successfully"
-        else:
-            return False, "Attendance not found"
+        try:
+            attendance = storage.get_by_id(Attendance, attendance_id)
+            if attendance:
+                attendance.update(**kwargs)
+                attendance.save()
+                return True, "Attendance updated successfully"
+            else:
+                return False, "Attendance not found"
+        except Exception as e:
+            return False, f"Failed to update attendance record: {str(e)}"
+

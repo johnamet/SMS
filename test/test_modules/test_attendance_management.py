@@ -48,7 +48,7 @@ class TestAttendanceManagement(unittest.TestCase):
         self.attendance_management.class_id = new_class.id
         parent = Parent(parent_id=self.user.id)
         students = self._create_students(new_class.id, parent.id)
-        attendance = self.attendance_management.create_attendance(student_id=students[0].id, status=1)
+        attendance, msg = self.attendance_management.create_attendance(student_id=students[0].id, status=1)
         self.assertIsInstance(attendance, Attendance)
         fetched_attendance = storage.get_by_id(Attendance, attendance.id)
         self.assertIsNotNone(fetched_attendance)
@@ -91,7 +91,7 @@ class TestAttendanceManagement(unittest.TestCase):
         fetched_attendances = storage.all(Attendance)
         self.assertEqual(len(fetched_attendances.values()), 101)
         class_attendance = self.attendance_management.get_attendance_by_class_id(new_class.id)
-        self.assertIsInstance(class_attendance[0], Attendance)
+        self.assertIsInstance(class_attendance[0][0], Attendance)
         student_attendance = self.attendance_management.get_student_attendance(random.choice(students).id)
         self.assertIsNotNone(student_attendance)
 
@@ -100,15 +100,20 @@ class TestAttendanceManagement(unittest.TestCase):
         self.attendance_management.class_id = new_class.id
         parent = Parent(parent_id=self.user.id)
         students = self._create_students(new_class.id, parent.id)
-        attendance = self.attendance_management.create_attendance(student_id=students[0].id, status=1)
+        attendance, msg = self.attendance_management.create_attendance(student_id=students[0].id, status=1)
+        old_term = attendance.term
         fetched_attendance = storage.get_by_id(Attendance, attendance.id)
         self.assertIsNotNone(fetched_attendance)
-        result = self.attendance_management.update_attendance(fetched_attendance.id, **{"term": "Term2"})
+        result = self.attendance_management.update_attendance(fetched_attendance.id, **{"term": "Term3"})
         self.assertTrue(result)
 
+        fetched_updated_attendance = storage.get_by_id(Attendance, attendance.id)
+
+        self.assertNotEqual(fetched_updated_attendance.term, old_term)
+
     def test_error_handling(self):
+        self.attendance_management.class_id = None
         with self.assertRaises(ValueError):
-            self.attendance_management.class_id = None
             self.attendance_management.create_attendance(student_id="1234", status=1)
 
 

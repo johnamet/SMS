@@ -22,6 +22,11 @@ class CourseManagement:
         course = Course(course_name, course_description, course_teacher)
         storage.new(course)
 
+    def get_course(self, course_id):
+        """
+
+        """
+
     def delete_course(self, course_id):
         course = storage.get_by_id(course_id)
         storage.delete(course)
