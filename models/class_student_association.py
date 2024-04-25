@@ -18,8 +18,8 @@ class StudentClassAssociation(Base):
 
     __tablename__ = 'student_class_assoc'
 
-    student_id = Column(String(50), ForeignKey("students.id"), primary_key=True)
-    class_id = Column(String(50), ForeignKey("classes.id"), primary_key=True)
+    student_id = Column( ForeignKey("students.id"), primary_key=True)
+    class_id = Column(ForeignKey("classes.id"), primary_key=True,)
 
     student = relationship("Student", back_populates="class_")
     class_ = relationship("Class", back_populates="students")

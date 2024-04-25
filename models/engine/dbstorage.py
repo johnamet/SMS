@@ -14,7 +14,7 @@ from models.basemodel import BaseModel
 from models.classe import Class
 from models.course import Course
 from models.feedback import Feedback
-from models.gradebook import Gradebook
+from models.grade import Grade
 from models.parent import Parent
 from models.permission import Permission
 from models.staff import Staff
@@ -25,7 +25,7 @@ from models.user import User
 classes = {"BaseModel": BaseModel, "User": User,
            "Course": Course, "Announcement": Announcement,
            "Feedbacks": Feedback, "Student": Student, "Parent": Parent,
-           "Staff": Staff, "Gradebook": Gradebook, "Permission": Permission,
+           "Staff": Staff, "Gradebook": Grade, "Permission": Permission,
            "Attendance": Attendance, "Class": Class}
 
 
@@ -148,6 +148,9 @@ class DBStorage:
         Args:
             cls (class): the class to query.
             id (str): the id of the object to get.
+
+        Returns:
+            object: an object from the database.
         """
         query = self.__session.query(cls).filter(cls.id == id)
         if query is None:

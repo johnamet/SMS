@@ -6,7 +6,7 @@ from datetime import datetime
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from models import Gradebook, Course, Class, Student, Base
+from models import Grade, Course, Class, Student, Base
 
 
 # Import your Gradebook and other model classes here
@@ -31,12 +31,12 @@ class TestGradebookModel(unittest.TestCase):
                                admission_date=datetime.today(),
                                gender="Male",
                                expected_graduation=datetime(2025, 1, 5))
-        self.gradebook_entry = Gradebook(grade=85, grade_desc="Homework", term="Term 1", course_id=self.course.id,
-                                         class_id=self.class_.id,
-                                         student_id=self.student.id)
-        gradebook_entry2 = Gradebook(grade=86, grade_desc="Classwork", term="Term 2", course_id=self.course.id,
+        self.gradebook_entry = Grade(grade=85, grade_desc="Homework", term="Term 1", course_id=self.course.id,
                                      class_id=self.class_.id,
                                      student_id=self.student.id)
+        gradebook_entry2 = Grade(grade=86, grade_desc="Classwork", term="Term 2", course_id=self.course.id,
+                                 class_id=self.class_.id,
+                                 student_id=self.student.id)
 
         # Add sample data to the session
         self.session.add_all([self.course, self.class_, self.student, self.gradebook_entry, gradebook_entry2])
@@ -44,22 +44,22 @@ class TestGradebookModel(unittest.TestCase):
 
     def test_gradebook_instantiation(self):
         # Test Gradebook instantiation
-        self.assertIsInstance(self.gradebook_entry, Gradebook)
+        self.assertIsInstance(self.gradebook_entry, Grade)
         self.assertIsNotNone(self.gradebook_entry.id)
 
     def test_gradebook_data_validation(self):
         # Test data validation (grade range)
         with self.assertRaises(ValueError):
-            Gradebook(grade=152,
-                      grade_desc="Homework",
-                      term="Term 1",
-                      course_id=self.course.id,
-                      class_id=self.class_.id,
-                      student_id=self.student.id)
+            Grade(grade=152,
+                  grade_desc="Homework",
+                  term="Term 1",
+                  course_id=self.course.id,
+                  class_id=self.class_.id,
+                  student_id=self.student.id)
 
     def test_relationships(self):
         # Test relationships
-        queried_gradebook_entry = self.session.query(Gradebook).first()
+        queried_gradebook_entry = self.session.query(Grade).first()
         self.assertEqual(queried_gradebook_entry.course, self.course)
         self.assertEqual(queried_gradebook_entry.classe, self.class_)
         self.assertEqual(queried_gradebook_entry.student, self.student)
@@ -76,7 +76,7 @@ class TestGradebookModel(unittest.TestCase):
         # Test deleting a gradebook entry
         self.session.delete(self.gradebook_entry)
         self.session.commit()
-        self.assertIsNone(self.session.query(Gradebook).filter(Gradebook.id == self.gradebook_entry.id).first())
+        self.assertIsNone(self.session.query(Grade).filter(Grade.id == self.gradebook_entry.id).first())
 
     def tearDown(self):
         # Clean up the session after each test

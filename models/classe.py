@@ -66,7 +66,7 @@ class Class(BaseModel, Base):
     # students = relationship("Student", backref="classe",
     #                         cascade="all, delete-orphan")
 
-    gradebooks = relationship("Gradebook", back_populates="classe")
+    gradebooks = relationship("Grade", back_populates="classe")
 
     def __init__(self, class_name, head_class_teacher,
                  academic_year,

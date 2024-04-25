@@ -7,7 +7,7 @@ from models.classe import Class
 from models.course import Course
 from models.engine.dbstorage import DBStorage
 from models.engine.filestorage import FileStorage
-from models.gradebook import Gradebook
+from models.grade import Grade
 from models.parent import Parent
 from models.permission import Permission
 from models.staff import Staff

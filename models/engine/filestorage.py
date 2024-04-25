@@ -8,7 +8,7 @@ from models.attendance import Attendance
 from models.basemodel import BaseModel
 from models.classe import Class
 from models.course import Course
-from models.gradebook import Gradebook
+from models.grade import Grade
 from models.parent import Parent
 from models.permission import Permission
 from models.staff import Staff
@@ -18,7 +18,7 @@ from models.user import User
 classes = {"BaseModel": BaseModel, "User": User,
            "Course": Course, "Announcement": Announcement,
            "Feedbacks": Feedback, "Student": Student, "Parent": Parent,
-           "Staff": Staff, "Gradebook": Gradebook, "Permission": Permission,
+           "Staff": Staff, "Gradebook": Grade, "Permission": Permission,
            "Attendance": Attendance, "Class": Class}
 
 

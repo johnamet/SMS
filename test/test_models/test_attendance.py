@@ -32,7 +32,8 @@ class TestAttendanceModel(unittest.TestCase):
             class_id=self.classe.id,
             student_id=self.student.id,
             term="Term 1",
-            status=1
+            status=1,
+            academic_year="2023/24"
         )
 
     def test_create_attendance(self):
@@ -70,7 +71,8 @@ class TestAttendanceModel(unittest.TestCase):
             class_id=self.classe.id,
             student_id=self.student.id,
             term="Term 1",
-            status=1
+            status=1,
+            academic_year="2023/24"
         )
         self.session.add(self.new_attendance)
         self.session.add(self.student)
@@ -88,7 +90,8 @@ class TestAttendanceModel(unittest.TestCase):
             class_id=self.classe.id,
             student_id=self.student.id,
             term="Term 1",
-            status=1
+            status=1,
+            academic_year="2023/24"
         )
         self.session.add(self.new_attendance)
         self.session.add(self.student)

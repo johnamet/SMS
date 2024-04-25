@@ -8,7 +8,7 @@ from sqlalchemy import Column, String, ForeignKey, DateTime, Date
 from sqlalchemy.orm import relationship, validates
 
 from models.basemodel import Base, BaseModel
-from models.gradebook import Gradebook
+from models.grade import Grade
 from models.attendance import Attendance
 from models.user import User
 # from models.parent_child_assoc import ParentChildAssociation
@@ -36,7 +36,7 @@ class Student(BaseModel, Base):
     first_name = Column(String(50), nullable=False)
     last_name = Column(String(50), nullable=False)
     other_names = Column(String(50))
-    dob = Column(Date)
+    dob = Column(Date, default=datetime.today)
     gender = Column(String(50), nullable=False)
     parent_id = Column(String(50), ForeignKey('parents.id'), nullable=False)
     attendances = relationship("Attendance", back_populates="student", cascade="all, delete-orphan")
@@ -44,7 +44,7 @@ class Student(BaseModel, Base):
     admission_date = Column(Date, nullable=False, default=datetime.now())
     class_ = relationship(StudentClassAssociation, back_populates="student")
     parents = relationship("Parent", back_populates="students")
-    gradebooks = relationship(Gradebook,
+    gradebooks = relationship(Grade,
                               back_populates='student',
                               cascade='all, delete')
 
@@ -63,11 +63,11 @@ class Student(BaseModel, Base):
     def __init__(self,
                  first_name,
                  last_name,
-                 dob,
                  gender,
                  parent_id,
                  expected_graduation: datetime,
                  admission_date: datetime,
+                 dob=datetime.now(),
                  other_names=None,*args, **kwargs):
         """
         Initialize a Student instance.
