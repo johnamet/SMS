@@ -117,8 +117,8 @@ class ClassManagement:
             if not self.class_id and class_id is None:
                 raise ValueError('class_id cannot be None')
 
-            return (self._attendance_management.get_attendance(**kwargs),
-                    len(self._attendance_management.get_attendance()))
+            return (self._attendance_management.get_attendance(**kwargs)[0],
+                    len(self._attendance_management.get_attendance()[0]))
         except Exception as e:
             return [], f"Error getting class attendance: {str(e)}"
 

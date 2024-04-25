@@ -77,11 +77,17 @@ class BaseModel:
             dict: Serialized representation of the model.
         """
         obj_s = self.__dict__.copy()
+        if "_sa_instance_state" in obj_s: del obj_s["_sa_instance_state"]
         if type(obj_s["created_at"]) == datetime:
             obj_s["created_at"] = self.created_at.strftime("%Y-%m-%d %H:%M:%S")
         if type(obj_s["updated_at"]) == datetime:
             obj_s["updated_at"] = self.updated_at.strftime("%Y-%m-%d %H:%M:%S")
+        for k, v in obj_s.items():
+            if isinstance(v, BaseModel):
+                obj_s[k] = v.serialize()
+
         obj_s["__class__"] = self.__class__.__name__
+        print(obj_s)
         return obj_s
 
     @classmethod
