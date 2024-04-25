@@ -2,10 +2,10 @@
 
 from sqlalchemy import Column, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models.basemodel import Base
+from models.basemodel import Base, BaseModel
 
 
-class StudentClassAssociation(Base):
+class StudentClassAssociation(BaseModel, Base):
     """
     StudentClassAssociation represents the association table between Student and Class models.
 
