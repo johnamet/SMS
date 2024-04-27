@@ -153,12 +153,31 @@ class UserManagement:
         user_ = storage.get_by_id(User, user_id)
 
         if not user_:
-            raise Exception("User not found")
+            raise ValueError(f"User with id: {user_id} not found")
 
         staff = Staff(id=user_id, role=role, **kwargs)
         staff.save()
 
         return staff, "Staff created successfully"
+
+    def create_parent(self, user_id, **kwargs):
+        """
+        Create a parent user.
+        """
+
+        try:
+            parent_user = storage.get_by_id(user_id)
+
+            if not parent_user:
+                raise ValueError(f"User with id: {parent_user.id} not found")
+
+            parent = Parent(id=parent_user.id, **kwargs)
+            parent.save()
+            return parent, "Parent created successfully"
+        except ValueError as e:
+            return False, f"Failed to create parent: {str(e)}"
+        except Exception as e:
+            return False, f"Failed to create parent: {str(e)}"
 
     def delete_staff(self, user_id):
         """
@@ -170,14 +189,28 @@ class UserManagement:
         Returns:
             tuple: A tuple containing a boolean indicating success and a message.
         """
-        staff = storage.get_by_id(Staff, user_id)
+        try:
+            staff = storage.get_by_id(Staff, user_id)
 
-        if not staff:
-            raise Exception("Staff not found")
+            if not staff:
+                raise Exception("Staff not found")
+            storage.delete(staff)
 
-        storage.delete(staff)
+            return True, "Staff deleted successfully"
+        except ValueError as e:
+            return False, f"Deleting Staff unsuccessful {str(e)}"
 
-        return True, "Staff deleted successfully"
+    def delete_parent(self, parent_id):
+        try:
+            parent = storage.get_by_id(Parent, parent_id)
+
+            if not parent:
+                raise Exception("Parent not found")
+            storage.delete(parent)
+
+            return True, "Parent deleted successfully"
+        except ValueError as e:
+            return False, f"Deleting Parent unsuccessful {str(e)}"
 
     def get_staff(self, user_id):
         """

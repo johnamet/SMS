@@ -393,7 +393,7 @@ class ClassManagement:
         Get comprehensive details about a class.
 
         Args:
-            class_id (int): The ID of the class.
+            class_id (str): The ID of the class.
 
         Returns:
             dict: A dictionary containing comprehensive details of the class.

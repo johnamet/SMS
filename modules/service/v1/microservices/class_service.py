@@ -54,7 +54,7 @@ def get_class(class_id):
 
         class_, msg = class_management.get_class_details(class_id)
         if class_:
-            return jsonify({class_id: class_, "status_msg": msg}), 200
+            return make_response(jsonify({class_id: class_, "status_msg": msg}), 200)
         else:
             abort(404, "Class not found")
     except ValueError as ve:

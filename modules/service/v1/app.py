@@ -61,7 +61,7 @@ def internal_server_error(error):
     Returns:
         JSON: Error message.
     """
-    return make_response(jsonify({"error": "Internal Server Error", "error_msg": {error}}), 500)
+    return make_response(jsonify({"error": str(error)}), 500)
 
 
 app.config["SWAGGER"] = {
