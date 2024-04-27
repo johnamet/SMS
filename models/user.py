@@ -6,14 +6,14 @@ The user model represents a user in the system.
 from datetime import datetime
 from hashlib import md5
 
-from bcrypt import gensalt, hashpw
-from sqlalchemy import Column, String, Boolean, Date, ForeignKey
+from bcrypt import gensalt
+from sqlalchemy import Column, String, Boolean, Date
 from sqlalchemy.orm import relationship, validates
 
 from models.basemodel import BaseModel, Base
 
 
-def _hash_passwword(password):
+def _hash_password(password):
     """
            Hashes the given password using bcrypt.
 
@@ -117,7 +117,7 @@ class User(BaseModel, Base):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.password = _hash_passwword(password)
+        self.password = _hash_password(password)
         self.gender = gender
         self.other_names = other_names
         self.address = address

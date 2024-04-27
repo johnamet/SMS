@@ -2,7 +2,7 @@
 """
 Course Management Module
 """
-from models import storage, Course, ClassCourseAssociation, Class, User
+from models import storage, Course, ClassCourseAssociation, Class, User, Staff
 
 
 class CourseManagement:
@@ -79,6 +79,12 @@ class CourseManagement:
         Returns:
             tuple: A tuple containing a list of courses and a message indicating success or failure.
         """
+
+        # Verify if teacher exists
+        teacher = storage.get_by_id(Staff, teacher_id)
+
+        if teacher is None:
+            raise ValueError("Teacher does not exist")
         try:
             courses = storage.query(Course).filter(Course.teacher_id == teacher_id).all()
             return courses, "Courses retrieved successfully"
@@ -95,6 +101,11 @@ class CourseManagement:
         Returns:
             tuple: A tuple containing a list of courses and a message indicating success or failure.
         """
+        # Check if class exists
+        class_ = storage.get_by_id(Class, class_id)
+
+        if class_ is None:
+            raise ValueError("Class does not exist")
         try:
             courses = storage.query(Course).join(ClassCourseAssociation).filter(
                 ClassCourseAssociation.class_id == class_id).all()
