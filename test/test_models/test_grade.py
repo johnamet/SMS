@@ -33,10 +33,11 @@ class TestGradebookModel(unittest.TestCase):
                                expected_graduation=datetime(2025, 1, 5))
         self.gradebook_entry = Grade(grade=85, grade_desc="Homework", term="Term 1", course_id=self.course.id,
                                      class_id=self.class_.id,
-                                     student_id=self.student.id)
+                                     student_id=self.student.id,
+                                     academic_year="2023/24")
         gradebook_entry2 = Grade(grade=86, grade_desc="Classwork", term="Term 2", course_id=self.course.id,
                                  class_id=self.class_.id,
-                                 student_id=self.student.id)
+                                 student_id=self.student.id, academic_year="2023/24")
 
         # Add sample data to the session
         self.session.add_all([self.course, self.class_, self.student, self.gradebook_entry, gradebook_entry2])
@@ -55,7 +56,7 @@ class TestGradebookModel(unittest.TestCase):
                   term="Term 1",
                   course_id=self.course.id,
                   class_id=self.class_.id,
-                  student_id=self.student.id)
+                  student_id=self.student.id, academic_year="2023/24")
 
     def test_relationships(self):
         # Test relationships

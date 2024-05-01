@@ -100,7 +100,6 @@ class TestAttendanceModel(unittest.TestCase):
         self.session.commit()
         queried_attendance = self.session.query(Attendance).all()
         queried_class = self.session.query(Class).first()
-        print(queried_class.attendances)
         self.assertEqual(len(queried_attendance), len(queried_class.attendances))
 
     def test_attendance_class_relationship(self):

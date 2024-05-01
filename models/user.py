@@ -5,15 +5,17 @@ The user model represents a user in the system.
 
 from datetime import datetime
 from hashlib import md5
+import re
+# from email_validator import validate_email
 
-from bcrypt import gensalt, hashpw
-from sqlalchemy import Column, String, Boolean, Date, ForeignKey
+from bcrypt import gensalt
+from sqlalchemy import Column, String, Boolean, Date
 from sqlalchemy.orm import relationship, validates
 
 from models.basemodel import BaseModel, Base
 
 
-def _hash_passwword(password):
+def _hash_password(password):
     """
            Hashes the given password using bcrypt.
 
@@ -26,6 +28,44 @@ def _hash_passwword(password):
     salt = gensalt()
     hashed_password = md5(password.encode('utf-8')).hexdigest()
     return hashed_password
+
+def validate_password(password_):
+    """
+    Validate a password based on the following criteria:
+    - At least 8 characters long
+    - Contains at least one uppercase letter
+    - Contains at least one lowercase letter
+    - Contains at least one digit
+    - Contains at least one special character (!@#$%^&*()-_+=)
+
+    Args:
+        password_ (str): The password to validate.
+
+    Returns:
+        bool: True if the password is valid, False otherwise.
+    """
+    # Check length
+    if len(password_) < 8:
+        return False
+
+    # Check for uppercase letter
+    if not re.search(r"[A-Z]", password_):
+        return False
+
+    # Check for lowercase letter
+    if not re.search(r"[a-z]", password_):
+        return False
+
+    # Check for digit
+    if not re.search(r"\d", password_):
+        return False
+
+    # Check for special character
+    if not re.search(r"[!@#$%^&*()-_+=]", password_):
+        return False
+
+    # All criteria met
+    return True
 
 
 class User(BaseModel, Base):
@@ -90,8 +130,34 @@ class User(BaseModel, Base):
             raise ValueError("Gender must be either male or female")
         return gender
 
+    # @validates("email")
+    # def validate_email(self, key, email):
+    #     """
+    #     Validates the email address format using the `email_validator` library.
+    #
+    #     Args:
+    #         key (str): Name of the field being validated (should be "email").
+    #         email (str): The email address to validate.
+    #
+    #     Raises:
+    #         ValueError: If the email address is not valid.
+    #     """
+    #
+    #     try:
+    #         # Validate email format using email_validator
+    #         if not validate_email(email):
+    #             raise ValueError(f"Invalid email address format for: {key}")
+    #
+    #     except (ValueError, AttributeError) as e:
+    #         # Handle potential errors like invalid email format or missing `email_validator`
+    #         raise ValueError(f"Error validating email address for: {key}. Exception: {e}")
+    #
+    #     # No exception raised, email is valid
+    #     return True
+
     def __init__(self, first_name, last_name, email, password,
                  gender,
+                 contact_number=None,
                  permission_id=None,
                  other_names=None,
                  address=None,
@@ -117,9 +183,10 @@ class User(BaseModel, Base):
         self.first_name = first_name
         self.last_name = last_name
         self.email = email
-        self.password = _hash_passwword(password)
+        self.password = _hash_password(password)
         self.gender = gender
         self.other_names = other_names
+        self.contact_number = contact_number
         self.address = address
         self.dob = dob
         self.last_login_date = last_login_date
@@ -136,3 +203,15 @@ class User(BaseModel, Base):
         query = storage.get_by_filter(User, User.email == email)
 
         return query.first()
+
+    # @property
+    # def password(self):
+    #     return self.password
+    #
+    # @password.setter
+    # def password(self, password):
+    #     if validate_password(password_=password):
+    #         self.password = _hash_password(password)
+    #     else:
+    #         raise ValueError("Password does not meet complexity requirements")
+    #

@@ -44,7 +44,7 @@ class Student(BaseModel, Base):
     admission_date = Column(Date, nullable=False, default=datetime.now())
     class_ = relationship(StudentClassAssociation, back_populates="student")
     parents = relationship("Parent", back_populates="students")
-    gradebooks = relationship(Grade,
+    gradebooks = relationship("Grade",
                               back_populates='student',
                               cascade='all, delete')
 

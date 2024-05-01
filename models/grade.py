@@ -30,8 +30,9 @@ class Grade(BaseModel, Base):
                    nullable=False, )
     out_of = Column(Integer, CheckConstraint('grade >= 0 AND grade <= 100 AND grade <= out_of'),
                     nullable=False, )
-    grade_desc = Column(String(50), nullable=True)
-    term = Column(String(50), nullable=True)
+    grade_desc = Column(String(50), nullable=False)
+    term = Column(String(50), nullable=False)
+    academic_year = Column(String(50), nullable=False)
     course_id = Column(String(50), ForeignKey('courses.id'), nullable=False)
     class_id = Column(String(50), ForeignKey('classes.id'), nullable=False)
     student_id = Column(String(50), ForeignKey('students.id'), nullable=False)
@@ -54,10 +55,12 @@ class Grade(BaseModel, Base):
                 "assessment", "exam", "dictation", "quiz"]
         if not grade_desc.lower() in desc:
             raise ValueError(f"Grade description must be either {desc}")
+        return grade_desc
 
     def __init__(self, grade,
                  grade_desc,
                  term,
+                 academic_year,
                  course_id, class_id, student_id,
                  out_of=10,
                  *args, **kwargs):
@@ -70,6 +73,7 @@ class Grade(BaseModel, Base):
             grade_desc (str): The description of the gradebook entry. e.g. homework, classwork, etc.
             term (str): The academic term the gradebook entry belongs to e.g. term 1, term 2, first semester.
             course_id (str): The ID of the course associated with the gradebook entry.
+            academic_year(str): The academic year the grade was recorded
             class_id (str): The ID of the class associated with the gradebook entry.
             student_id (str): The ID of the student associated with the gradebook entry.
             *args: Additional positional arguments.
@@ -79,6 +83,7 @@ class Grade(BaseModel, Base):
         self.grade = grade
         self.grade_desc = grade_desc
         self.term = term
+        self.academic_year = academic_year
         self.course_id = course_id
         self.class_id = class_id
         self.student_id = student_id

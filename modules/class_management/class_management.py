@@ -117,8 +117,8 @@ class ClassManagement:
             if not self.class_id and class_id is None:
                 raise ValueError('class_id cannot be None')
 
-            return (self._attendance_management.get_attendance(**kwargs),
-                    len(self._attendance_management.get_attendance()))
+            return (self._attendance_management.get_attendance(**kwargs)[0],
+                    len(self._attendance_management.get_attendance()[0]))
         except Exception as e:
             return [], f"Error getting class attendance: {str(e)}"
 
@@ -167,7 +167,7 @@ class ClassManagement:
         if self.class_id:
             class_ = storage.get_by_id(Class, self.class_id)
         else:
-            raise(Exception("Class id cannot be None"))
+            raise (Exception("Class id cannot be None"))
 
         return class_
 
@@ -196,7 +196,7 @@ class ClassManagement:
             if student is not None:
                 class_ = self.get_class(class_id)
                 if class_:
-                    association = StudentClassAssociation(class_id=class_id,)
+                    association = StudentClassAssociation(class_id=class_id, )
                     association.student = student
                     class_.students.append(association)
                 else:
@@ -294,3 +294,149 @@ class ClassManagement:
                     "Class successfully created")
         except Exception as e:
             return False, f"Error creating class: {str(e)}"
+
+    def get_classes(self):
+        """
+        Returns a list of all classes.
+        """
+
+        try:
+            query = storage.query(Class)
+        except Exception as e:
+            return None, f"Error getting classes: {str(e)}"
+
+        return query.all(), f"Classes successfully retrieved"
+
+    def update_class(self, class_id, **class_info):
+        """
+        Update information of an existing class.
+
+        Args:
+            class_id (int): The ID of the class to update.
+            class_info (dict): A dictionary containing updated class information.
+
+        Returns:
+            tuple: A tuple containing the ID of the updated class and a message indicating success or failure.
+        """
+        try:
+            class_ = storage.get_by_id(Class, class_id)
+            if not class_:
+                raise ValueError("Class does not exist")
+            for key, value in class_info.items():
+                setattr(class_, key, value)
+            storage.save(class_)
+            return class_id, "Class updated successfully"
+        except Exception as e:
+            return None, f"Failed to update class: {str(e)}"
+
+    def delete_class(self, class_id):
+        """
+        Delete an existing class.
+
+        Args:
+            class_id (int): The ID of the class to delete.
+        """
+        try:
+            class_ = storage.get_by_id(Class, class_id)
+            if class_:
+                # Delete associated records like attendance, gradebooks, etc.
+                for attendance_record in class_.attendances:
+                    storage.delete(attendance_record)
+                for gradebook in class_.gradebooks:
+                    storage.delete(gradebook)
+                storage.delete(class_)
+        except Exception as e:
+            return f"Failed to delete class: {str(e)}"
+
+    # def get_class_schedule(self, class_id):
+    #     """
+    #     Get the schedule of a class.
+    #
+    #     Args:
+    #         class_id (int): The ID of the class.
+    #
+    #     Returns:
+    #         dict: A dictionary containing the schedule details of the class.
+    #     """
+    #     try:
+    #         class_ = storage.get_by_id(Class, class_id)
+    #         if not class_:
+    #             raise ValueError("Class does not exist")
+    #
+    #         # Retrieve schedule details from the class object or associated records
+    #         # Implement according to how schedule information is stored in your system
+    #
+    #         return schedule_details, "Class schedule retrieved successfully"
+    #     except Exception as e:
+    #         return None, f"Failed to retrieve class schedule: {str(e)}"
+
+    def search_classes(self, query):
+        """
+        Search for classes based on various criteria.
+
+        Args:
+            query (str): The search query.
+
+        Returns:
+            list: A list of classes matching the search criteria.
+        """
+        try:
+            # Implement the search logic based on criteria like class name, teachers, academic year, etc.
+            # Return a list of classes that match the search query
+            classes = []  # Implement the search logic here
+            return classes, "Classes retrieved successfully"
+        except Exception as e:
+            return None, f"Failed to search classes: {str(e)}"
+
+    def get_class_details(self, class_id):
+        """
+        Get comprehensive details about a class.
+
+        Args:
+            class_id (str): The ID of the class.
+
+        Returns:
+            dict: A dictionary containing comprehensive details of the class.
+        """
+        try:
+            class_ = storage.get_by_id(Class, class_id)
+            if not class_:
+                raise ValueError("Class does not exist")
+
+            # Serialize the class object to extract details
+            # Include information about enrolled students, associated courses, attendance records, gradebooks, etc.
+            class_details = class_.serialize()
+
+            class_details["grades"] = [grade.serialize() for grade in class_.gradebooks]
+            class_details["attendances"] = [attendance.serialize() for attendance in class_.attendances]
+            class_details["students"] = [student.serialize() for student in class_.students]
+
+            return class_details, "Class details retrieved successfully."
+        except Exception as e:
+            return None, f"Failed to retrieve class details: {str(e)}"
+
+    def get_classes_paginated(self, page=1, page_size=10):
+        """
+        Get a list of classes with pagination.
+
+        Args:
+            page (int): The page number to retrieve (default is 1).
+            page_size (int): The number of classes per page (default is 10).
+
+        Returns:
+            tuple: A tuple containing a list of classes, total number of classes, and a message indicating success or failure.
+        """
+        try:
+            classes_query = storage.query(Class)
+            total_classes = classes_query.count()
+
+            # Calculate offset and limit based on pagination parameters
+            offset = (page - 1) * page_size
+            limit = page_size
+
+            # Retrieve classes for the current page
+            classes = classes_query.offset(offset).limit(limit).all()
+
+            return classes, total_classes, "Classes retrieved successfully"
+        except Exception as e:
+            return None, 0, f"Failed to retrieve classes: {str(e)}"
