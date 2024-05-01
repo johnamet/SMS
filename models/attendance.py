@@ -52,7 +52,7 @@ class Attendance(BaseModel, Base):
             student_id (str): The ID of the student whose attendance is recorded.
             term (str): The term or session during which the attendance was taken.
             status (int): The attendance status (1 for present, 0 for absent).
-            date (DateTime): The date the attendance was taken.
+            date (datetime): The date the attendance was taken.
             *args: Additional positional arguments.
             **kwargs: Additional keyword arguments.
         """

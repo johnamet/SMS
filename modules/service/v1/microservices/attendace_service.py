@@ -235,8 +235,6 @@ def create_attendance():
         term = data.get('term')
         academic_year = data.get('academic_year')
 
-        print(data)
-
         if not student_id or not status:
             abort(400, "Student ID and status are required")
 

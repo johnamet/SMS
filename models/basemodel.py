@@ -87,7 +87,6 @@ class BaseModel:
                 obj_s[k] = v.serialize()
 
         obj_s["__class__"] = self.__class__.__name__
-        print(obj_s)
         return obj_s
 
     @classmethod
@@ -112,7 +111,8 @@ class BaseModel:
 
 
         Returns:
-            bool: True if successfully saved, False otherwise.
+            bool: True if successfully scleart
+            aved, False otherwise.
         """
         from models import storage
         try:

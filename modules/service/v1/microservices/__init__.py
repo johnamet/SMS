@@ -10,3 +10,4 @@ from modules.service.v1.microservices.attendace_service import *
 from modules.service.v1.microservices.course_service import *
 from modules.service.v1.microservices.class_service import *
 from modules.service.v1.microservices.user_service import *
+from modules.service.v1.microservices.grade_service import *

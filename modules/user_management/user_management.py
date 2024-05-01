@@ -15,54 +15,8 @@ Classes:
 import re
 
 from models import storage, User, Staff, Parent
-from models.user import _hash_password
-
-
-def validate_password(password_):
-    """
-    Validate a password based on the following criteria:
-    - At least 8 characters long
-    - Contains at least one uppercase letter
-    - Contains at least one lowercase letter
-    - Contains at least one digit
-    - Contains at least one special character (!@#$%^&*()-_+=)
-
-    Args:
-        password_ (str): The password to validate.
-
-    Returns:
-        bool: True if the password is valid, False otherwise.
-    """
-    # Check length
-    if len(password_) < 8:
-        return False
-
-    # Check for uppercase letter
-    if not re.search(r"[A-Z]", password_):
-        return False
-
-    # Check for lowercase letter
-    if not re.search(r"[a-z]", password_):
-        return False
-
-    # Check for digit
-    if not re.search(r"\d", password_):
-        return False
-
-    # Check for special character
-    if not re.search(r"[!@#$%^&*()-_+=]", password_):
-        return False
-
-    # All criteria met
-    return True
-
-
-# Example usage:
-password = "Password123!"
-if validate_password(password):
-    print("Password is valid")
-else:
-    print("Password is not valid")
+from models.user import _hash_password, validate_password
+import validate_email
 
 
 class UserManagement:
@@ -76,30 +30,49 @@ class UserManagement:
 
     """
 
-    def create_user(self, first_name, last_name, email, password_, **kwargs):
+    def create_user(self, user):
         """
         Create a new user.
 
         Args:
-            first_name (str): The first name of the user.
-            last_name (str): The last name of the user.
-            email (str): The email address of the user.
-            password_ (str): The password of the user.
-            **kwargs: Additional keyword arguments for user attributes.
+            user (dict): User to create.
 
         Returns:
             tuple: A tuple containing the created user object and a message.
         """
-        existing_user = User.get_by_email(email)
-        if existing_user:
-            return None, "User with this email already exists"
+        if not user:
+            raise Exception("User cannot be empty.")
 
-        user = User(first_name=first_name,
-                    last_name=last_name,
-                    email=email,
-                    password=password_, **kwargs)
-        storage.new(user)
-        return user, "User created successfully"
+        if 'password' not in user:
+            raise Exception("Password cannot be empty.")
+        if 'first_name' not in user:
+            raise Exception("First name cannot be empty.")
+        if 'last_name' not in user:
+            raise Exception("Last name cannot be empty.")
+        if 'email' not in user:
+            raise Exception("Email cannot be empty.")
+        if 'gender' not in user:
+            raise Exception("Gender cannot be empty.")
+
+        if not validate_email.validate_email(user['email']):
+            raise Exception("Invalid email format.")
+
+        if not validate_password(user['password']):
+            raise Exception("Password does not meet complexity requirements.")
+
+        user = User(**user)
+        existing_user = User.get_by_email(user.email)
+        if existing_user:
+            raise Exception("Email already exists")
+
+        if user.first_name is None or user.last_name is None or user.password is None or user.email is None:
+            return None, "Missing mandatory fields"
+
+        if user:
+            user.save()
+            return user, "User created successfully"
+        else:
+            return None, f"Failed to create user {user.first_name}"
 
     def update_user(self, user_id, **kwargs):
         """
@@ -114,7 +87,12 @@ class UserManagement:
         """
         user = storage.get_by_id(User, user_id)
         if not user:
-            return None, "User not found"
+            raise Exception("User not found")
+
+        values = kwargs.values()
+
+        if None in values or "" in values:
+            raise Exception("Invalid update data")
 
         user.update(**kwargs)
         user.save()
@@ -133,9 +111,9 @@ class UserManagement:
         """
         user = storage.get_by_id(User, user_id)
         if not user:
-            return False, "User not found"
+            raise Exception("User not found")
 
-        user.delete()
+        storage.delete_by_id(User, user.id)
         return True, "User deleted successfully"
 
     def create_staff(self, user_id, role, **kwargs):
@@ -241,7 +219,7 @@ class UserManagement:
         """
         user = storage.get_by_id(User, user_id)
         if not user:
-            return None, "User not found"
+            raise Exception("User not found")
 
         return user, "User retrieved successfully"
 
@@ -299,7 +277,7 @@ class UserManagement:
 
         return parent.students, "Parent wards retrieved successfully"
 
-    def change_password(self, user_id, current_password, new_password):
+    def change_password(self, user_id, new_password):
         """
         Change the password of a user.
 
@@ -315,8 +293,8 @@ class UserManagement:
         if not user:
             return False, "User not found"
 
-        if not user.verify_password(current_password):
-            return False, "Current password is incorrect"
+        # if not user.verify_password(current_password):
+        #     return False, "Current password is incorrect"
 
         if not validate_password(new_password):
             return False, "New password must be at least 8 characters long and meet complexity requirements"
@@ -472,3 +450,22 @@ class UserManagement:
             return parents, "All parent users retrieved successfully"
         except Exception as e:
             return None, f"Unable to retrieve parents: {e}"
+
+    def login(self, email, password):
+        """
+        logins in a user
+        """
+
+        if not email or not password:
+            raise ValueError("Email and password is required")
+
+        user = storage.query(User).filter_by(email=email).first()
+        if not user:
+            raise ValueError(f"User with email '{email}' not found")
+
+        hashed_password = _hash_password(password)
+
+        if user.password != hashed_password:
+            raise ValueError("Password does not match")
+
+        return user, "User verified"

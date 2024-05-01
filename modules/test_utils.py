@@ -16,7 +16,7 @@ class_management = ClassManagement()
 
 def create_staff_member():
     user = User(first_name=faker.first_name(), last_name=faker.last_name(),
-                email=faker.email(), password=faker.password(),
+                email=faker.email(), password="StrongPassword!",
                 is_staff=True, is_active=True, gender=random.choice(['male', 'female']))
     user.save()
     staff = Staff(id=user.id)

@@ -43,7 +43,6 @@ class AttendanceManagement:
         """
         try:
             query = storage.query(Attendance)
-            print(query.all())
             if self.class_id:
                 class_ = storage.get(Class, self.class_id)
                 if class_:
@@ -54,7 +53,6 @@ class AttendanceManagement:
 
             if self.academic_year:
                 query = query.filter(Attendance.academic_year == self.academic_year)
-                print(query.all())
 
             if self.term:
                 query = query.filter(Attendance.term == self.term)
@@ -183,4 +181,3 @@ class AttendanceManagement:
                 return False, "Attendance not found"
         except Exception as e:
             return False, f"Failed to update attendance record: {str(e)}"
-

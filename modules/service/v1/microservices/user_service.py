@@ -3,12 +3,54 @@
 The management service
 """
 import requests
-from flask import jsonify, abort, make_response, request
+from flask import jsonify, request, abort, make_response
+from flask_jwt_extended import jwt_required
 
-from modules.service.v1.app import services
+from modules.service.v1.microservices import services
 from modules.user_management.user_management import UserManagement
 
 user_management = UserManagement()
+
+
+@services.route('/login', methods=['POST'], strict_slashes=False)
+def login():
+    data = request.get_json()
+
+    email = data['email']
+    password = data['password']
+
+    if not email or not password:
+        abort(404, message='Email and password are required')
+
+    try:
+        user, msg = user_management.login(email, password)
+
+        if not user:
+            abort(404, message='Access denied')
+
+    except ValueError as e:
+        abort(400, message=str(e))
+
+    except Exception as e:
+        abort(500, message=str(e))
+
+    data["id"] = user.id
+
+
+    r = requests.post('http://127.0.0.1:8000/auth', json=data)
+
+    print(r.status_code)
+
+    if r.status_code == 200:
+        response = {
+            'access_token': r.json()['access_token'],
+            'token_type': 'jwt',
+            'expires_in': 1800
+        }
+
+    else:
+        return jsonify({"message":"Failed to create access token. Please try again.", "error":r.text}), r.status_code
+    return jsonify(response), 200
 
 
 @services.route('/users', methods=['GET'], strict_slashes=False)
@@ -21,7 +63,6 @@ def get_users():
     """
     try:
         users, msg = user_management.get_all_users()
-        print(users)
         users_dict = {user.id: user.serialize() for user in users}
         results = {
             'users': users_dict,
@@ -156,19 +197,12 @@ def create_user():
         abort(400, "No first_name")
     if 'last_name' not in response:
         abort(400, "No last_name")
+
+    if 'gender' not in response:
+        abort(400, 'No gender')
     try:
-        first_name = response.get('first_name')
-        last_name = response.get('last_name')
-        email = response.get('email')
-        password = response.get('password')
 
-        del response["first_name"]
-        del response["last_name"]
-        del response["email"]
-        del response["password"]
-
-        user, msg = user_management.create_user(first_name=first_name, last_name=last_name, email=email,
-                                                password_=password, **response)
+        user, msg = user_management.create_user(response)
         result = {user.id: user.serialize(), "status_msg": msg}
         return make_response(jsonify(result), 200)
     except ValueError as e:

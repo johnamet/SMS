@@ -71,15 +71,12 @@ class TestCourseManagement(unittest.TestCase):
         }
         course, msg = self.course_management.create_course(course_dict)
         result, msg = self.course_management.disassociate_course_from_class(course.id, new_class.id)
-        print(msg)
         self.assertTrue(result)
 
     def test_get_course_details(self):
         course, message = self.course_management.get_course_details(self.course.id)
         self.assertIsNotNone(course)
         self.assertIsInstance(course, dict)
-        print(message)
-        print(course)
 
     def test_delete_course(self):
         result, msg = self.course_management.delete_course(self.course.id)

@@ -2,18 +2,36 @@
 """
 Service v1 app.
 """
-from flask_cors import CORS
-from flask import Blueprint
 from os import environ
-from flask import Flask, jsonify, make_response
+
+from dotenv import find_dotenv, load_dotenv
+from flasgger import Swagger
+from flask import Flask, jsonify, make_response, request
+from flask_cors import CORS
+
+from models import storage
 # from flasgger import Swagger
 from modules.service.v1.microservices import services
-from models import storage
+from flask_jwt_extended import jwt_required, JWTManager, get_jwt_identity, verify_jwt_in_request
+
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
 
 app = Flask(__name__)
 app.config['JSONIFY_PRETTYPRINT_REGULAR'] = True
+app.config['JWT_SECRET_KEY'] = environ.get('APP_SECRET')
 app.register_blueprint(services)
 CORS(app, resources={r"/modules/service/v1/*": {"origins": "*"}})
+jwt = JWTManager(app)
+
+
+@app.before_request
+def before_request():
+    # prompt user to log in to get an access token
+    print("Before request", request.endpoint)
+    if request.endpoint not in ['services.login']:
+        verify_jwt_in_request()
 
 
 @app.teardown_appcontext
@@ -70,7 +88,7 @@ app.config["SWAGGER"] = {
     "version": "1.0.0",
 }
 
-# Swagger(app)
+Swagger(app)
 
 if __name__ == "__main__":
     host = environ.get("HOST", "0.0.0.0")

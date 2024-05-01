@@ -120,6 +120,7 @@ class DBStorage:
         Args:
             obj (object): the object to delete.
         """
+
         self.__session.delete(obj)
         self.__session.commit()
 

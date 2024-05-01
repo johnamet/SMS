@@ -346,7 +346,7 @@ class ClassManagement:
                     storage.delete(gradebook)
                 storage.delete(class_)
         except Exception as e:
-            print(f"Failed to delete class: {str(e)}")
+            return f"Failed to delete class: {str(e)}"
 
     # def get_class_schedule(self, class_id):
     #     """
@@ -402,8 +402,6 @@ class ClassManagement:
             class_ = storage.get_by_id(Class, class_id)
             if not class_:
                 raise ValueError("Class does not exist")
-
-            print(class_)
 
             # Serialize the class object to extract details
             # Include information about enrolled students, associated courses, attendance records, gradebooks, etc.
