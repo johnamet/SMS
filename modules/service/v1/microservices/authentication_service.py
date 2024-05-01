@@ -2,13 +2,14 @@
 """
 The authentication service module
 """
+from datetime import datetime, timedelta
+from os import environ as env
+
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import serialization
-from flask_jwt_extended import jwt_required, JWTManager, jwt_required, get_jwt_identity, create_access_token
-from flask import Flask, jsonify, request
 from dotenv import find_dotenv, load_dotenv
-from os import environ as env
-import jwt
+from flask import Flask, jsonify, request
+from flask_jwt_extended import JWTManager, create_access_token
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -20,6 +21,8 @@ with open('private.pem', 'rb') as key_file:
 app = Flask(__name__)
 app.config['JWT_SECRET_KEY'] = env.get("APP_SECRET")
 jwt = JWTManager(app)
+
+blacklist = set()
 
 
 @jwt.invalid_token_loader
@@ -47,7 +50,8 @@ def login():
                              'password': password,
                              'client_id': env.get("CLIENT_ID"),
                              'client_secret': env.get("CLIENT_SECRET"),
-                             'iss': 'http://localhost:8000/auth'}
+                             'iss': 'http://localhost:8000/auth',
+                             'exp': datetime.utcnow() + timedelta(minutes=30)}
 
         token = create_access_token(identity=id_, additional_claims=additional_claims)
 
@@ -60,10 +64,27 @@ def login():
     return jsonify({"access_token": access_token}), 200
 
 
-@app.route('/logout', methods=['GET'], strict_slashes=False)
+@app.route('/logout', methods=['POST'], strict_slashes=False)
 def logout():
-    pass
+    try:
+        # Get the raw JWT token from the request
+        token = request.headers.get('Authorization')
+        if not token:
+            return jsonify({'message': 'No token provided'}), 401
+
+        # Add token to blacklist
+        blacklist.add(token)
+
+        return jsonify({'message': 'Logout successful'}), 200
+    except Exception as e:
+        return jsonify({'message': f'Internal Server Error: {str(e)}'}), 500
+
+
+# Check if token is revoked
+@jwt.token_in_blocklist_loader
+def check_token_in_blacklist(decrypted_token):
+    return decrypted_token['jti'] in blacklist
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000)
+    app.run(host=env.get("AUTH_SERVER_HOST", "0.0.0.0"), port=env.get("AUTH_SERVER_PORT", 8080))
