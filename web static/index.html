@@ -1,141 +1,204 @@
 <!DOCTYPE html>
 <html lang="en">
+
     
     <head>
         <meta chartset="utf=8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title> Welcome to the SMS</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
         <link rel="stylesheet" href="styles.css">
-        <meta name="viewport" content="width-device-width, initial-scale=1">
+        <meta name="viewport" content="width-device-width, initial-scale=1.0">
         <meta name="desciption" content="We make school management easy on all stakeholders">
-        <meta name="author" content="github.com/johnamet & opheliatex@gmail.com">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.css">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
         <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
         <link rel="icon" type="image/x-icon" href="logo.png">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+        <!--
+        <style>
+          body {
+            background-image: url(imgs/school\ building.jpg);
+            background-size: cover;
+            width: 100%;
+            height: 100%;
+            text-decoration-color: brown;
+            text
+            }
+        </style>
+        -->
+    </head>
     </head>
     <body>
         <header class="header" id="header">
-             <h1>School Management Cordination Simplified</h1>
-             <h2>Access important information "on the go"</h2>
-             <h3>Manage students</h3>
-             <h3>Coordinate stuff</h3>
-             <h3>Improve outcomes</h3>
-             <h3>24/7 tech support</h3>
-        </header>
+            <h1>The Model School</h1>
 
-        <div class="container" id="login">
-            <form action="">
-                <h2>Sign into your account</h2>
-                <label for="email">Email :</label>
-                <input type="email" placeholder="Enter your email" value="" required>
-                <br></br>
-                <label for="password">Password :</label>
-                <input type="password" value="" placeholder="Enter your password" required>
-                <br></br>
-                <a target="_blank" href="/h">Forgot password?</a>
-                <input type="submit" value="Sign in" id="submit">
-                <!--<input class="g_id_signin" google>-->
+<!--
+        <nav class="navbar">
+            <a href="#home" class="active">Home</a>
+            <a href="#about">About</a>
+            <a href="#enqury">enqury</a>
+            <a href="#events">Events</a>
+            <a href="#contact">Contact</a>
+
+            <span class="active-nav"></span>
+            <span class="animate" style="--i:2;"></span>
+        </nav>
+    -->
+    
+      
+    <nav class="navbar" style="background-color: #e3f2fd;">
+        <!-- Navbar content -->
+    </nav>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="nav">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#home">Home</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="#about">About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#enqury">Enqury</a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  More
+                </a>
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="#events">Events</a></li>
+                  <li><a class="dropdown-item" href="#contact">Contact Us</a></li>
+                 
+                  <li><hr class="dropdown-divider"></li>
+                  <li><a class="dropdown-item" href="#follow">Follow Us</a></li>
+                </ul>
+              </li>
+              
+            </ul>
+            <form class="d-flex" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
+
+            <li class="nav-item">
+                <a class="nav-link enabled" aria-enabled="true">
+              </li>
+          </div>
         </div>
-        <div id="display">
-            <div class="container">
-                <button>search</button>
-                <div id="profile" type="dropdown">
-                    <label id="account">
-                        <select name="links" id="links" size="1" onchange="window.location.href=thisObject.value;">
-                            <option value="http">My profile</option>
-                            <option value="http">Messages</option>
-                            <option value="http">My performance</option>
-                            <option value="http">My payslip</option>
-                            <option value="http">logout</option>
-                        </select>
-                    </label>
+      </nav>   
+        </header>
+        <section>
+            <div class="home-content">
+                <img src="imgs\learn.jpg"  alt="learn">
+                <p>The city Model School INT is one of the best schools in the country</p>
+                <p>for premium Basic, Elementary and High School education.</p>
+                <p>dedicated staff, we model the future generation.</p>
+                <p>100% of our students can take part in integrated learning</p>
+                <span class="animate" style="--i:4;"></span>
+                <div class="btn-box">
+                    <a href="#" class="btn">study here</a>
+                    <span class="animate" style="--i:5;"></span>
+                </div>
+                
+            </div>
+        </section>
+            
+        <section class="about" id="about">
+            <h2 class="heading">About <span>TCMS</span><span class="animate scroll" style="--i:1;"></span></h2>
+            <div class="about-img">
+                <img src="imgs/school building.jpg" width="100%"; height="50%"; alt="sch image">
+                <span class="circle-spin"></span>
+                <span class="animate scroll" style="--i:2;"></span>
+            </div>
+            </div>
+            <div class="about-content">
+                <h3>Unlocking Potential: How TCMS Empowers Students for Success<span class="animate scroll" style="--i:3;"></span></h3>
+                <p>
+                    In today's dynamic world, education isn't just about imparting knowledge; it's about equipping students with the skills, mindset, and confidence to thrive in an ever-changing landscape.
+                </p>
+                <p>
+                    At TCMS, we believe in nurturing the potential within each student, providing them with a foundation that prepares them not only for academic excellence but also for personal and professional success.
+                    Empowering Education:
+                    At the heart of TCMS's philosophy is the belief that every student has unique talents and abilities waiting to be unlocked. Through our holistic approach to education,
+                    we empower students to discover their passions, pursue their interests, and unleash their full potential.
+                    From innovative teaching methods to personalized learning experiences, we create an environment where students are inspired to dream big and reach for the stars.
+                </p>
+                <p>
+                    Focus on Excellence:
+                    Excellence is not just a goal at TCMS;it's a way of life. We hold ourselves to the highest standards of academic rigor, ensuring that our students are challenged and stimulated to achieve their very best.
+                    Our dedicated faculty members are not just educators but mentors, guiding students on their educational journey and instilling in them a thirst for knowledge and a commitment to excellence that will last a lifetime.
+                </p>
+                <p>
+                    for the Future:
+                    In today's rapidly evolving world, adaptability and resilience are essential traits for success.
+                    That's why at TCMS, we go beyond traditional academics to provide students with the skills they need to thrive in the 21st century.
+                    From critical thinking and problem-solving to communication and collaboration, we foster the skills that are in high demand in today's global economy,
+                    ensuring that our graduates are well-equipped to navigate whatever challenges the future may hold.
+                </p>
+                <p>
+                    Community of Support:
+                    Education is a collaborative effort, and at TCMS, we believe in the power of community.
+                    From our dedicated teachers and staff to our engaged parents and alumni network, we create a supportive environment where every student feels valued, encouraged, and empowered to succeed.
+                    Our close-knit community fosters lifelong connections and provides students with the support system they need to overcome obstacles and achieve their goals.
+                    At TCMS, we believe that education is not just about preparing students for the future; it's about empowering them to shape it. Through our innovative programs, dedicated faculty, and supportive community,
+                    we are committed to unlocking the potential within each student and preparing them to lead lives of purpose, passion, and impact.
+                    Join us on this journey of discovery, growth, and excellence at TCMS.
+                </p>
+                <span class="animate scroll" style="--i:4;"></span>
+                    
+                <div class="btn-box btns">
+                    <a href="#contact" class="btn">Contact Us</a>
+                    <span class="animate scroll" style="--i:5;"></span>
                 </div>
             </div>
-            <div id="menu">
-                <img id="icon" src="" alt="sch logo">
-                <p>The Model School</p>
+        </section>
 
-                <div id="Home">Home</div>
+        <section class="enqury">
+            <div id="enqury">
+                <form action="">
+                    <h3>Request Information</h3>
+                    <textarea name="" id="textarea" cols="30" rows="10"
+                    placeholder="Please enter your message here" required></textarea><br>
+                    <input type="radio" id="parent" name="category">
+                    <label for="parent">Perent</label><br>
 
-                <div id="Administration">
-                    <h2>User Management</h2>
-                    <div id="General">
-                        <h2>General</h2>
-                        <div>
-                            <h2>Add New School Term</h2>
-                            <h2>School Term Review</h2>
-                            <h2>Review School</h2>
-                            <h2>School Calendar</h2>
-                            <h2>Update School Profile</h2>
-                            <h2>Create Duty Roaster</h2>
-                        </div>
-                    </div>
-                    <div id="Setups">
-                        <h2>Setups</h2>
-                    </div>
-                    <div id="Review">
-                        <h2>Review</h2>
-                    </div>
-                    <div id="Settings">
-                        <h2>Settings</h2>
-                    </div>
-                </div>
-                <div id="Classroom">
-                    <h2>Classroom Management</h2>
-                    <div id="General">
-                        <div id="New Classroom Setup">
-                            <div id="Enter Details">
-                                <h2>Enter Details</h2>
+                    <input type="radio" id="teacher" name="category">
+                    <label for="teacher">Teacher</label><br>
 
-                            </div>
-                            <div id="Select Teacher(s)"></div>                             
-                        </div>
-                        <div id="Classroom Review"></div>
-                        <div id="Student Grade Recording"></div>
-                        <div id="Student Attendance"></div>
-                        <div id="Student By Classroom"></div>
-                    </div>
-                    <div id="Gradebook Management">
-                        <h2>Gradebook Management</h2>
-                        <div id="Classroom of Student">Classroom of Student</div>
-                        <div id="Classroom to Record">Classroom to Record</div>
-                        <div id="Select Subject">Select Subject</div>
-                        <div id="Select Teacher">Select Teacher</div>
-                        <input type="checkbox">Visible to Parent</input>
-                        <input type="button">Set Total</input>
-                        <input type="checkbox">Send Notification</input>
-                    </div>
-                    <div id="Attendance">
-                        <h2>Attendance Tracking</h2>
-                        <div  id="Student Attendance"></div>
-                    </div>
-                    <div id="Notification"></div>
-                    </div>
-                    <div id="Lesson Planner"></div>
-                </div>
-                <div id="Course">
-                    <h2>Course Management</h2>
-                </div>
-                <div id="Teacher">
-                    <h2>Teacher Management</h2>
-                </div>
-                <div id="Student">
-                    <h2>Student Management</h2>
-                </div>
-                <div id="Communication">
-                    <h2>Announcement and Communication</h2>
-                </div>
-                <div id="Parent">
-                    <h2>Parent Portal</h2>
-                </div>
+                    <input type="radio" id="student" name="category">
+                    <label for="student">Student</label><br>
+ 
+                    <input type="radio" id="other" name="category">
+                    <label for="other">Other</label><br>
+            
+                    <input type="submit" value="Send">
+                </form>
             </div>
-        </div>
-        </div>
+        </section>
+        <section class="events" id="events">
+            <h2>Events</h2>
+        </section>    
+        <section class="contact" id="contact">
+            <div class="contact" id="contact">
+                <h3>Contact us</h3>
+                <p>No.1 Oxford st. Accra Ghana</p>
+                <p>0023354000000</p>
+                <p>info@tcms.edu.gh</p>
+            </div>
+        </section>
+        
         <footer>
-            <h3>copyright reserved</h3>
-            <h4>covered</h4>
+            <div class="follow" id="follow">
+                <a href="#"><i class='bx bxl-twitter'></i></a>
+                <a href="#"><i class='bx bxl-linkedin'></i></a>
+                <h4>copyright reserved</h4>
+                <h4>maintained</h4>
+            </div>
+
         </footer>
+        
     </body>
 </html>
