@@ -81,9 +81,9 @@ def logout():
 
 
 # Check if token is revoked
-@jwt.token_in_blocklist_loader
-def check_token_in_blacklist(decrypted_token):
-    return decrypted_token['jti'] in blacklist
+# @jwt.token_in_blocklist_loader()
+# def check_token_in_blacklist(decrypted_token):
+#     return decrypted_token['jti'] in blacklist
 
 
 if __name__ == '__main__':

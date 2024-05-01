@@ -29,7 +29,6 @@ jwt = JWTManager(app)
 @app.before_request
 def before_request():
     # prompt user to log in to get an access token
-    print("Before request", request.endpoint)
     if request.endpoint not in ['services.login']:
         verify_jwt_in_request()
 

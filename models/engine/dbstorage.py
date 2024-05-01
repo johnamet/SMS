@@ -64,9 +64,6 @@ class DBStorage:
 
                 # Create all tables
                 Base.metadata.create_all(self.__engine)
-
-            else:
-                raise ValueError("Storage engine not specified or invalid.")
         except KeyError as e:
             raise ValueError(f"Missing environment variable: {e}")
         except Exception as e:
@@ -189,5 +186,6 @@ class DBStorage:
 
 
 # Instantiate the storage engine
-dbstorage = DBStorage()
-dbstorage.reload()
+if environ.get("STORAGE_ENGINE") == "db":
+    dbstorage = DBStorage()
+    dbstorage.reload()

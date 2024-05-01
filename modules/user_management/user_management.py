@@ -451,7 +451,7 @@ class UserManagement:
         except Exception as e:
             return None, f"Unable to retrieve parents: {e}"
 
-    def login(self, email, password):
+    def login(self, email, password, role="admin"):
         """
         logins in a user
         """
@@ -462,6 +462,15 @@ class UserManagement:
         user = storage.query(User).filter_by(email=email).first()
         if not user:
             raise ValueError(f"User with email '{email}' not found")
+        #
+        # if role == "parent":
+        #     parent = storage.query(Parent).filter_by(id=user.id).first()
+        #     if not parent:
+        #         raise ValueError(f"Parent with id '{user.id}' not found")
+        # else:
+        #     staff = storage.query(Staff).filter_by(id=user.id).first()
+        #     if not staff:
+        #         raise ValueError(f"Staff with id '{user.id}' not found")
 
         hashed_password = _hash_password(password)
 

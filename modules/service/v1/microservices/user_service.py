@@ -2,6 +2,8 @@
 """
 The management service
 """
+from datetime import datetime, timedelta
+
 import requests
 from flask import jsonify, request, abort, make_response
 from flask_jwt_extended import jwt_required
@@ -16,41 +18,60 @@ user_management = UserManagement()
 def login():
     data = request.get_json()
 
-    email = data['email']
-    password = data['password']
+    email = data.get('email')
+    password = data.get('password')
+    role = data.get('role', None)
 
     if not email or not password:
-        abort(404, message='Email and password are required')
+        abort(400, 'Email and password are required')
+
+    # if not role:
+    #     abort(400, 'Role is required. eg. parent, teacher, admin, etc')
 
     try:
-        user, msg = user_management.login(email, password)
+        user, msg = user_management.login(email, password, role)
 
         if not user:
-            abort(404, message='Access denied')
+            abort(404, 'Access denied')
 
     except ValueError as e:
-        abort(400, message=str(e))
+        abort(400, str(e))
 
     except Exception as e:
-        abort(500, message=str(e))
+        abort(500, str(e))
 
     data["id"] = user.id
 
-
     r = requests.post('http://127.0.0.1:8000/auth', json=data)
-
-    print(r.status_code)
 
     if r.status_code == 200:
         response = {
             'access_token': r.json()['access_token'],
+            'user_id': user.id,
             'token_type': 'jwt',
-            'expires_in': 1800
+            'expires_in': datetime.now() + timedelta(minutes=30),
         }
 
+        user_management.update_user(user.id, **{"last_login_date": datetime.utcnow(),
+                                                "last_login_ip": request.remote_addr})
+
     else:
-        return jsonify({"message":"Failed to create access token. Please try again.", "error":r.text}), r.status_code
+        return jsonify({"message": "Failed to create access token. Please try again.", "error": r.text}), r.status_code
     return jsonify(response), 200
+
+
+@services.route('/logout', methods=['POST'], strict_slashes=False)
+def logout():
+    data = request.headers
+
+    authorization = data.get('Authorization')
+
+    if not authorization:
+        abort(400, 'Missing Authorization')
+
+    r = requests.post('http://127.0.0.1:8000/auth', json=jsonify({"access_token": authorization}))
+
+    return jsonify(r.json()), r.status_code
 
 
 @services.route('/users', methods=['GET'], strict_slashes=False)
@@ -63,13 +84,16 @@ def get_users():
     """
     try:
         users, msg = user_management.get_all_users()
-        users_dict = {user.id: user.serialize() for user in users}
-        results = {
-            'users': users_dict,
-            'message': msg
-        }
+        if users:
+            users_dict = {user.id: user.serialize() for user in users}
+            results = {
+                'users': users_dict,
+                'message': msg
+            }
 
-        return make_response(jsonify(results), 200)
+            return make_response(jsonify(results), 200)
+        else:
+            return make_response(jsonify({"message": "No users found."}), 404)
 
     except Exception as e:
         abort(500, f"Internal Server Error: {str(e)}")
