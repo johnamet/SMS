@@ -5,7 +5,6 @@ Gradebook management module.
 This module provides functionality for managing gradebooks in the school system.
 """
 
-from collections import defaultdict
 from models import Grade, storage
 
 

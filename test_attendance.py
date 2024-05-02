@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 
 
-from faker import Faker
 import random
 from datetime import datetime
-from models.attendance import Attendance
+
+from faker import Faker
 
 from models import User, Staff, Class, Parent, Student
+from models.attendance import Attendance
 
 faker = Faker()
 

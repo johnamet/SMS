@@ -12,11 +12,10 @@ Classes:
     UserManagement: Provides methods for managing users.
 """
 
-import re
+import validate_email
 
 from models import storage, User, Staff, Parent
 from models.user import _hash_password, validate_password
-import validate_email
 
 
 class UserManagement:

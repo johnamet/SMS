@@ -82,10 +82,10 @@ class TestGradebookManagement(unittest.TestCase):
         Test retrieving a gradebook by its ID.
         """
         grade1 = Grade(grade=85, grade_desc="Homework", term="Term 1", course_id=self.course.id,
-                            class_id=self.class_.id,
-                            out_of=100,
-                            student_id=self.student.id,
-                            academic_year="2023/24")
+                       class_id=self.class_.id,
+                       out_of=100,
+                       student_id=self.student.id,
+                       academic_year="2023/24")
         grade1.save()
         gradebook_mgmt = GradebookManagement()
         grade, message = gradebook_mgmt.get_gradebook_by_id(grade1.id)

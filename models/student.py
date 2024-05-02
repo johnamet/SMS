@@ -4,13 +4,10 @@ Student Model
 """
 from datetime import datetime
 
-from sqlalchemy import Column, String, ForeignKey, DateTime, Date
+from sqlalchemy import Column, String, ForeignKey, Date
 from sqlalchemy.orm import relationship, validates
 
 from models.basemodel import Base, BaseModel
-from models.grade import Grade
-from models.attendance import Attendance
-from models.user import User
 # from models.parent_child_assoc import ParentChildAssociation
 from models.class_student_association import StudentClassAssociation
 
@@ -68,7 +65,7 @@ class Student(BaseModel, Base):
                  expected_graduation: datetime,
                  admission_date: datetime,
                  dob=datetime.now(),
-                 other_names=None,*args, **kwargs):
+                 other_names=None, *args, **kwargs):
         """
         Initialize a Student instance.
 

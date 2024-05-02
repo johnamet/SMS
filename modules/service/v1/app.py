@@ -2,17 +2,23 @@
 """
 Service v1 app.
 """
+import base64
+import os
 from os import environ
 
 from dotenv import find_dotenv, load_dotenv
 from flasgger import Swagger
 from flask import Flask, jsonify, make_response, request
 from flask_cors import CORS
+from flask_jwt_extended import JWTManager, verify_jwt_in_request
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes
+from cryptography.hazmat.primitives.ciphers import algorithms, Cipher
+from cryptography.hazmat.primitives.ciphers.modes import GCM
+from apscheduler.schedulers.background import BackgroundScheduler
 
 from models import storage
-# from flasgger import Swagger
 from modules.service.v1.microservices import services
-from flask_jwt_extended import jwt_required, JWTManager, get_jwt_identity, verify_jwt_in_request
 
 ENV_FILE = find_dotenv()
 if ENV_FILE:
@@ -24,6 +30,49 @@ app.config['JWT_SECRET_KEY'] = environ.get('APP_SECRET')
 app.register_blueprint(services)
 CORS(app, resources={r"/modules/service/v1/*": {"origins": "*"}})
 jwt = JWTManager(app)
+
+
+# Function to rotate secret key
+def rotate_secret_key():
+    # Implement logic to generate a new secret key
+    new_secret_key = generate_app_secret()
+    app.config['JWT_SECRET_KEY'] = new_secret_key
+
+
+# Schedule token rotation
+scheduler = BackgroundScheduler()
+scheduler.add_job(rotate_secret_key, 'interval', hours=2)  # Rotate key every 24 hours
+scheduler.start()
+
+
+def generate_app_secret(length=32):
+    """
+  Generates a cryptographically secure app secret of specified length.
+
+  Args:
+      length (int, optional): Length of the secret in bytes. Defaults to 32 (256 bits).
+
+  Returns:
+      str: The generated app secret (base64 encoded).
+  """
+    # Generate random key and initialization vector (IV)
+    key = os.urandom(32)  # 256-bit key
+    iv = os.urandom(12)  # 96-bit IV
+
+    # Create cipher object
+    cipher = Cipher(algorithms.AES(key), GCM(iv), default_backend())
+    encryptor = cipher.encryptor()
+
+    # Hash a random string to create secret data
+    hasher = hashes.Hash(hashes.SHA256(), backend=default_backend())
+    hasher.update(os.urandom(100))  # Generate random data for hashing
+    secret_data = hasher.finalize()
+
+    # Encrypt the secret data
+    ciphertext = encryptor.update(secret_data) + encryptor.finalize()
+
+    # Encode the ciphertext for storage/transmission
+    return base64.b64encode(iv + ciphertext).decode('utf-8')
 
 
 @app.before_request

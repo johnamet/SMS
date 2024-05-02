@@ -4,7 +4,6 @@ Qualification Model
 """
 
 from sqlalchemy import Column, String, ForeignKey
-from sqlalchemy.orm import relationship
 
 from models.basemodel import BaseModel, Base
 

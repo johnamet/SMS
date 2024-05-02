@@ -132,7 +132,6 @@ class DBStorage:
          .filter(cls.id == id_).delete())
         self.__session.commit()
 
-
     def reload(self):
         """
         Reload all records in the database.

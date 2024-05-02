@@ -10,7 +10,6 @@ unenrolling students, and more.
 
 from flask import jsonify, request, abort, make_response
 
-from models import Class
 from modules.class_management.class_management import ClassManagement
 from modules.service.v1.microservices import services
 
@@ -87,7 +86,7 @@ def create_class():
             abort(400, "Class name, head class teacher, academic year, and courses list are required")
 
         success, message = class_management.create_class(class_name, head_class_teacher, academic_year,
-                                                          courses_list, assist_class_teacher, students_list)
+                                                         courses_list, assist_class_teacher, students_list)
 
         if success:
             return jsonify({"message": message}), 201

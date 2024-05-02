@@ -6,6 +6,7 @@ This module provides methods to manage attendance records for students.
 """
 
 from sqlalchemy import desc, asc
+
 from models import storage, Attendance, Class
 
 

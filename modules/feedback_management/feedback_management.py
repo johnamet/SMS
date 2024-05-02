@@ -3,8 +3,8 @@
 This module provides functionality for managing feedback.
 """
 
-from models.feedback import Feedback
 from models import storage
+from models.feedback import Feedback
 
 
 class FeedbackManagement:

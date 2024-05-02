@@ -1,13 +1,12 @@
 import json
 import os
 
-from models.feedback import Feedback
-
 from models.announcement import Announcement
 from models.attendance import Attendance
 from models.basemodel import BaseModel
 from models.classe import Class
 from models.course import Course
+from models.feedback import Feedback
 from models.grade import Grade
 from models.parent import Parent
 from models.permission import Permission

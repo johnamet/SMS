@@ -2,8 +2,8 @@
 """
 Staff management module
 """
-from models.staff import Staff
 from models import storage
+from models.staff import Staff
 
 
 class StaffManagement:
@@ -52,7 +52,6 @@ class StaffManagement:
         except Exception as e:
             return False, f"Failed to update staff: {e}"
 
-
     def get_staff(self, staff_id=None):
         """
         Gets staffs if given staff id get a single staff member
@@ -92,7 +91,3 @@ class StaffManagement:
                 return None, "No staff members found matching the criteria."
         except Exception as e:
             return None, f"Failed to retrieve staff members: {e}"
-
-
-
-

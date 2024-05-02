@@ -6,10 +6,9 @@ Parent model
 from sqlalchemy import Column, ForeignKey, String, Table
 from sqlalchemy.orm import relationship
 
-from models.basemodel import Base, BaseModel
-
 # Import Base.metadata here
 from models.basemodel import Base
+from models.basemodel import BaseModel
 
 parent_student_association = Table('parent_student_association', Base.metadata,
                                    Column("parent_id", String(50), ForeignKey('parents.id'), nullable=False),

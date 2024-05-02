@@ -9,11 +9,13 @@ from sqlalchemy.orm import relationship, validates
 from models.basemodel import BaseModel, Base
 from models.qualification import Qualification
 
+
 # Association table for the many-to-many relationship between Staff and Course
 staff_course_association = Table('staff_course_association', Base.metadata,
-    Column('staff_id', String(50), ForeignKey('staff.id')),
-    Column('course_id', String(50), ForeignKey('courses.id'))
-)
+                                 Column('staff_id', String(50), ForeignKey('staff.id')),
+                                 Column('course_id', String(50), ForeignKey('courses.id'))
+                                 )
+
 
 
 class Staff(BaseModel, Base):

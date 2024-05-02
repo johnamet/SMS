@@ -2,10 +2,11 @@
 """
 Tests for class management
 """
+import random
 import unittest
 from datetime import datetime
+
 from faker import Faker
-import random
 
 from models import Class, Student, User, Staff, Parent, Course, storage
 from modules.class_management.class_management import ClassManagement

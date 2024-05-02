@@ -9,9 +9,8 @@ unenrolling students, and more.
 """
 
 from models import Class, storage, Student, ClassCourseAssociation, Course
-from modules import class_management
-from modules.attendance_tracking.attendance_management import AttendanceManagement
 from models.class_student_association import StudentClassAssociation
+from modules.attendance_tracking.attendance_management import AttendanceManagement
 
 
 class ClassManagement:

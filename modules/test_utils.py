@@ -1,9 +1,11 @@
-from datetime import datetime
 import random
+from datetime import datetime
+
+from faker import Faker
 
 from models import User, Staff, Parent, Class, Student, Attendance, Course, Grade, StudentClassAssociation
-from faker import Faker
-from modules.class_management.class_management import  ClassManagement
+from modules.class_management.class_management import ClassManagement
+
 faker = Faker()
 
 term = random.choice(["Term 1", "Term 2", "Term 3"])
@@ -92,5 +94,3 @@ def populate_db(range_=50):
             create_grade(student.id, class_.id, course.id)
 
     return class_.id
-
-
