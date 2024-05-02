@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title> Welcome to the SMS</title>
+        <link rel="stylesheet" href="styles.css">
+        <meta name="viewport" content="width-device-width, initial-scale=1">
+        <meta name="desciption" content="We make school management easy on all stakeholders">
+        <meta name="author" content="github.com/johnamet & opheliatex@gmail.com">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/fontawesome.css">
+        <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+        <link rel="icon" type="image/x-icon" href="logo.png">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>teacher</title>
+</head>
+<body>
+    <div class="container" id="login">
+        <form action="">
+            <h2>Sign into your account</h2>
+            <label for="email">Email :</label>
+            <input type="email" placeholder="Enter your email" value="" required>
+            <br></br>
+            <label for="password">Password :</label>
+            <input type="password" value="" placeholder="Enter your password" required>
+            <br></br>
+            <a target="_blank" href="/h">Forgot password?</a>
+            <input type="submit" value="Sign in" id="submit">
+            <!--<input class="g_id_signin" google>-->
+        </form>
+    </div>
+
+    <div id="display">
+        <div class="container">
+            <button>search</button>
+            <div id="profile" type="dropdown">
+                <label id="account">
+                    <select name="links" id="links" size="1" onchange="window.location.href=thisObject.value;">
+                        <option value="http">My profile</option>
+                        <option value="http">Messages</option>
+                        <option value="http">My performance</option>
+                        <option value="http">My payslip</option>
+                        <option value="http">logout</option>
+                    </select>
+                </label>
+            </div>
+        </div>
+</body>
+</html>
