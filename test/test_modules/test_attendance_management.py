@@ -1,7 +1,8 @@
+import random
 import unittest
 from datetime import datetime
+
 from faker import Faker
-import random
 
 from models import Attendance, storage, Staff, Class, Student, User, Parent
 from modules import AttendanceManagement
@@ -15,8 +16,8 @@ class TestAttendanceManagement(unittest.TestCase):
 
     def _create_staff_member(self):
         self.user = User(first_name=self.faker.first_name(), last_name=self.faker.last_name(),
-                    email=self.faker.email(), password=self.faker.password(),
-                    is_staff=True, is_active=True, gender=random.choice(['male', 'female']))
+                         email=self.faker.email(), password=self.faker.password(),
+                         is_staff=True, is_active=True, gender=random.choice(['male', 'female']))
         self.user.save()
         staff = Staff(id=self.user.id)
         staff.save()

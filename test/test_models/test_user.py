@@ -7,7 +7,7 @@ from models.user import User
 class UserModelTestCase(unittest.TestCase):
     def setUp(self):
         self.user = User("first", "last",
-                         "test@test.com", "password",gender="Male")
+                         "test@test.com", "password", gender="Male")
         self.user.contact_number = []
         self.user.feedbacks = []
 

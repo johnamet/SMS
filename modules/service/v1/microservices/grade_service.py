@@ -4,7 +4,6 @@ Gradebook management service module.
 
 This module provides a RESTful API for managing gradebooks in the school system.
 """
-from collections import defaultdict
 
 from flask import jsonify, request, abort
 
@@ -14,7 +13,7 @@ from modules.service.v1.microservices import services
 gradebook_management = GradebookManagement()
 
 
-@services.route('/gradebooks', methods=['GET'], strict_slashes=False)
+@services.route('/grades', methods=['GET'], strict_slashes=False)
 def get_gradebooks():
     """
     Retrieves gradebooks based on student ID or class ID provided in the query parameters.
@@ -23,16 +22,17 @@ def get_gradebooks():
         JSON (200): A list of retrieved gradebooks and a success message.
         JSON (400): Error message for bad request (e.g., invalid query parameters).
     """
-    response = request.get_json()
-    student_id = response.get('student_id')
-    class_id = response.get('class_id')
-    academic_year = response.get('academic_year')
-    term = response.get('term')
+    if request.get_json(silent=True):
+        response = request.get_json()
+        student_id = response.get('student_id')
+        class_id = response.get('class_id')
+        academic_year = response.get('academic_year')
+        term = response.get('term')
 
-    gradebook_management.student_id = student_id
-    gradebook_management.class_id = class_id
-    gradebook_management.academic_year = academic_year
-    gradebook_management.term = term
+        gradebook_management.student_id = student_id
+        gradebook_management.class_id = class_id
+        gradebook_management.academic_year = academic_year
+        gradebook_management.term = term
 
     results, msg = gradebook_management.get_gradebooks()
 
@@ -40,10 +40,10 @@ def get_gradebooks():
 
     if results is None:
         return abort(400, msg)
-    return jsonify({"gradebooks": results, "message": msg}), 200
+    return jsonify({"grades": results, "message": msg}), 200
 
 
-@services.route('/gradebooks/<grade_id>', methods=['GET'], strict_slashes=False)
+@services.route('/grades/<grade_id>', methods=['GET'], strict_slashes=False)
 def get_gradebook_by_id(grade_id):
     """
     Retrieves a gradebook by its ID.
@@ -61,7 +61,7 @@ def get_gradebook_by_id(grade_id):
     return jsonify({"gradebook": results, "message": msg}), 200
 
 
-@services.route('/gradebooks', methods=['POST'], strict_slashes=False)
+@services.route('/grades', methods=['POST'], strict_slashes=False)
 def record_grade():
     """
     Creates a new gradebook entry.
@@ -83,7 +83,7 @@ def record_grade():
     return jsonify({"gradebook": results, "message": msg}), 200
 
 
-@services.route('/gradebooks/<grade_id>', methods=['PUT'], strict_slashes=False)
+@services.route('/grades/<grade_id>', methods=['PUT'], strict_slashes=False)
 def update_grade(grade_id):
     """
     Updates information of a gradebook.
@@ -107,7 +107,7 @@ def update_grade(grade_id):
     return jsonify({"message": msg}), 200
 
 
-@services.route('/gradebooks/<grade_id>', methods=['DELETE'], strict_slashes=False)
+@services.route('/grades/<grade_id>', methods=['DELETE'], strict_slashes=False)
 def delete_grade(grade_id):
     """
     Deletes a gradebook by its ID.

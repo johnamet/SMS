@@ -2,7 +2,7 @@
 """
 The authentication service module
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 from os import environ as env
 
 from cryptography.hazmat.backends import default_backend
@@ -33,8 +33,6 @@ def invalid_token():
 @app.route('/auth', methods=['POST'], strict_slashes=False)
 def login():
     data = request.get_json()
-
-    print(data)
     try:
         if not data:
             return jsonify({'message': 'No data'}), 400
@@ -51,7 +49,7 @@ def login():
                              'client_id': env.get("CLIENT_ID"),
                              'client_secret': env.get("CLIENT_SECRET"),
                              'iss': 'http://localhost:8000/auth',
-                             'exp': datetime.utcnow() + timedelta(minutes=30)}
+                             'exp': datetime.now(UTC) + timedelta(minutes=30)}
 
         token = create_access_token(identity=id_, additional_claims=additional_claims)
 

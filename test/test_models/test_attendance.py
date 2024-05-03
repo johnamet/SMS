@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-import unittest
 import datetime
+import unittest
 
-from sqlalchemy import create_engine, DateTime
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models import Student, Class

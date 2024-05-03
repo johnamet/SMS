@@ -6,8 +6,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from models import Base, Parent, Grade, Attendance, Staff, Class
-from models.student import Student
 from models.class_student_association import StudentClassAssociation
+from models.student import Student
 
 
 class TestStudentRelationships(unittest.TestCase):
@@ -38,16 +38,16 @@ class TestStudentRelationships(unittest.TestCase):
 
         # Create a class
         self.class1 = Class(class_name="Class 1", head_class_teacher=head_teacher.id, academic_year="2022/23",
-                       assist_class_teacher=assistant_teacher.id)
+                            assist_class_teacher=assistant_teacher.id)
         self.class2 = Class(class_name="Class 2", head_class_teacher=head_teacher.id, academic_year="2023/24",
-                       assist_class_teacher=assistant_teacher.id)
+                            assist_class_teacher=assistant_teacher.id)
 
         self.parent.students.append(self.student)
 
         self.gradebook1 = Grade(course_id="course_1", student_id=self.student.id, grade=15, class_id="class_id",
                                 grade_desc="homework", term="Term 2", academic_year="2023/24")
         self.gradebook2 = Grade(course_id="course_2", student_id=self.student.id, grade=15, class_id="class_id",
-                                grade_desc="homework", term="Term 2",academic_year="2023/24")
+                                grade_desc="homework", term="Term 2", academic_year="2023/24")
         self.attendance1 = Attendance(date=datetime(2024, 4, 20), student_id=self.student.id,
                                       class_id="class_id", term="Term 2", status=1, academic_year="2022/2023")
         self.attendance2 = Attendance(date=datetime(2024, 4, 21), student_id=self.student.id,

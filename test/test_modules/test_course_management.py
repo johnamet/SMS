@@ -1,7 +1,6 @@
 #!/usr/bin/python3
 import unittest
 
-from models import storage, Course
 from modules.course_management.course_management import CourseManagement
 from modules.test_utils import *
 
@@ -55,7 +54,6 @@ class TestCourseManagement(unittest.TestCase):
         self.assertTrue(result)
 
     def test_update_course(self):
-
         update_dict = {"course_name": "Course Test"}
 
         result, msg = self.course_management.update_course(self.course.id, **update_dict)

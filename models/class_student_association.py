@@ -1,7 +1,8 @@
 #!/usr/bin/python3
 
-from sqlalchemy import Column, String, ForeignKey
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy.orm import relationship
+
 from models.basemodel import Base, BaseModel
 
 
@@ -18,8 +19,8 @@ class StudentClassAssociation(BaseModel, Base):
 
     __tablename__ = 'student_class_assoc'
 
-    student_id = Column( ForeignKey("students.id"), primary_key=True)
-    class_id = Column(ForeignKey("classes.id"), primary_key=True,)
+    student_id = Column(ForeignKey("students.id"), primary_key=True)
+    class_id = Column(ForeignKey("classes.id"), primary_key=True, )
 
     student = relationship("Student", back_populates="class_")
     class_ = relationship("Class", back_populates="students")

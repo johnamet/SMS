@@ -5,7 +5,7 @@ This module contains the Attendance model
 """
 import datetime
 
-from sqlalchemy import Column, String, ForeignKey, Integer, DateTime, Date
+from sqlalchemy import Column, String, ForeignKey, Integer, DateTime
 from sqlalchemy.orm import relationship
 
 from models.basemodel import BaseModel, Base

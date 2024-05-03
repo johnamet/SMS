@@ -2,11 +2,11 @@
 """
 The management service
 """
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, UTC
 
 import requests
+from flasgger import swag_from
 from flask import jsonify, request, abort, make_response
-from flask_jwt_extended import jwt_required
 
 from modules.service.v1.microservices import services
 from modules.user_management.user_management import UserManagement
@@ -15,6 +15,7 @@ user_management = UserManagement()
 
 
 @services.route('/login', methods=['POST'], strict_slashes=False)
+@swag_from('swagger_docs/login.yml')
 def login():
     data = request.get_json()
 
@@ -42,7 +43,7 @@ def login():
 
     data["id"] = user.id
 
-    r = requests.post('http://127.0.0.1:8000/auth', json=data)
+    r = requests.post('http://127.0.0.1:8004/auth', json=data)
 
     if r.status_code == 200:
         response = {
@@ -52,7 +53,7 @@ def login():
             'expires_in': datetime.now() + timedelta(minutes=30),
         }
 
-        user_management.update_user(user.id, **{"last_login_date": datetime.utcnow(),
+        user_management.update_user(user.id, **{"last_login_date": datetime.now(UTC),
                                                 "last_login_ip": request.remote_addr})
 
     else:

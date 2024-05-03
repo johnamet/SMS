@@ -1,8 +1,10 @@
 #!/usr/bin/python3
 import unittest
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Class, Staff, ClassCourseAssociation, BaseModel, Base
+
+from models import Class, Staff, ClassCourseAssociation, Base
 
 
 class TestClassModel(unittest.TestCase):

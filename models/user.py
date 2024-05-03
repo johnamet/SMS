@@ -3,16 +3,18 @@
 The user model represents a user in the system.
 """
 
+import re
 from datetime import datetime
 from hashlib import md5
-import re
-# from email_validator import validate_email
 
 from bcrypt import gensalt
 from sqlalchemy import Column, String, Boolean, Date
 from sqlalchemy.orm import relationship, validates
 
 from models.basemodel import BaseModel, Base
+
+
+# from email_validator import validate_email
 
 
 def _hash_password(password):
@@ -28,6 +30,7 @@ def _hash_password(password):
     salt = gensalt()
     hashed_password = md5(password.encode('utf-8')).hexdigest()
     return hashed_password
+
 
 def validate_password(password_):
     """

@@ -1,0 +1,56 @@
+---
+swagger: "2.0"
+info:
+  title: "Login API"
+  description: "API to authenticate users"
+  version: "1.0.0"
+host: localhost"
+basePath: "/services/v1"
+schemes:
+  - "http"
+  - "https"
+paths:
+  /login:
+    post:
+      summary: "Authenticate user"
+      description: "Authenticate user with email and password"
+      tags:
+        - "Authentication"
+      consumes:
+        - "application/json"
+      produces:
+        - "application/json"
+      parameters:
+        - name: "body"
+          in: "body"
+          description: "User credentials"
+          required: true
+          schema:
+            type: "object"
+            properties:
+              email:
+                type: "string"
+              password:
+                type: "string"
+              role:
+                type: "string"
+      responses:
+        200:
+          description: "User authenticated successfully"
+          schema:
+            type: "object"
+            properties:
+              access_token:
+                type: "string"
+              user_id:
+                type: "string"
+              token_type:
+                type: "string"
+              expires_in:
+                type: "string"
+        400:
+          description: "Invalid input"
+        404:
+          description: "Access denied"
+        500:
+          description: "Internal server error"
