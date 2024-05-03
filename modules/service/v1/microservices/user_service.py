@@ -6,12 +6,22 @@ from datetime import datetime, timedelta, UTC
 
 import requests
 from flasgger import swag_from
+from os import environ as env
+from dotenv import load_dotenv, find_dotenv
 from flask import jsonify, request, abort, make_response
 
 from modules.service.v1.microservices import services
 from modules.user_management.user_management import UserManagement
 
 user_management = UserManagement()
+
+ENV_FILE = find_dotenv()
+if ENV_FILE:
+    load_dotenv(ENV_FILE)
+
+AUTH_SERVER = env.get('AUTH_SERVER_HOST')
+AUTH_PORT = env.get('AUTH_SERVER_PORT')
+AUTH_PATH = f"http://{AUTH_SERVER}:{AUTH_PORT}/auth"
 
 
 @services.route('/login', methods=['POST'], strict_slashes=False)
@@ -43,7 +53,7 @@ def login():
 
     data["id"] = user.id
 
-    r = requests.post('http://127.0.0.1:8004/auth', json=data)
+    r = requests.post(AUTH_PATH, json=data)
 
     if r.status_code == 200:
         response = {
