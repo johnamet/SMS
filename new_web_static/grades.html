@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade List</title>
+    <style>
+        /* Add your CSS styles here */
+    </style>
+</head>
+
+<body>
+        <div class="container">
+        <h1>Grade List</h1>
+        <table>
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Subject</th>
+                    <th>Grade</th>
+                </tr>
+            </thead>
+            <tbody id="gradeList">
+                <!-- Grade list will be populated here -->
+            </tbody>
+        </table>
+        <div id="error" class="error"></div>
+    </div>
+
+    <script>
+        // Function to fetch grades using AJAX
+        function fetchGrades() {
+            // Make an AJAX request to fetch grades
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', 'http://127.0.0.1:8080/services/v1/grades', true); // Replace example.com with your server's IP/domain and PORT with the appropriate port number
+            xhr.setRequestHeader('Content-Type', 'application/json');
+            xhr.setRequestHeader('Authorization', 'Bearer ' + getCookie('access_token'));
+
+            // Define what to do on successful data submission
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    const grades = JSON.parse(xhr.responseText).grades;
+                    const gradeList = document.getElementById('gradeList');
+
+                    // Clear existing content
+                    gradeList.innerHTML = '';
+
+                    // Populate grade list
+                    grades.forEach(grade => {
+                        const gradeItem = document.createElement('div');
+                        gradeItem.textContent = `Student: ${grade.student_id}, Subject: ${grade.course_id}, Grade: ${grade.grade}`;
+                        gradeList.appendChild(gradeItem);
+                    });
+                } else {
+                    console.error('Failed to fetch grades');
+                }
+            };
+
+            // Define what to do in case of error
+            xhr.onerror = function () {
+                console.error('Error occurred while fetching grades');
+            };
+
+            // Send the request
+            xhr.send();
+        }
+
+        // Function to get cookie value by name
+        function getCookie(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [cookieName, cookieValue] = cookie.split('=');
+                if (cookieName.trim() === name) {
+                    return cookieValue;
+                }
+            }
+            return '';
+        }
+
+        // Call the fetchGrades function when the page loads
+        window.onload = fetchGrades;
+    </script>
+</body>
+
+</html>
