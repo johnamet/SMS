@@ -18,5 +18,16 @@ def login():
 
     return render_template('pages/login.html', cache_id=cache_id)
 
+@app.route('/admin-dashboard')
+def admin_dashboard():
+    cache_id = uuid.uuid4()
+
+    return render_template('pages/admin_dashboard.html', cache_id=cache_id)
+
+@app.route('/attendance', strict_slashes=False)
+def attendance_portal():
+    cache_id = uuid.uuid4()
+
+    return render_template('/pages/attendance.html', cache_id=cache_id)
 if __name__ == '__main__':
     app.run("0.0.0.0", 8081, debug=True)
