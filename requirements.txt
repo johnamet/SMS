@@ -21,7 +21,6 @@ distro==1.8.0
 dnf==4.19.2
 fabric==3.2.2
 Faker==24.11.0
-fedora-third-party==0.10
 file-magic==0.4.0
 flasgger==0.9.7.1
 Flask==3.0.2
