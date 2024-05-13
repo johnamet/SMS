@@ -20,11 +20,10 @@ class Role(BaseModel, Base):
     """
 
     __tablename__ = "roles"
-
     role_name = Column(String(50), unique=True, nullable=False)
     role_desc = Column(String(124))
 
-    permissions = relationship("Permission", backref="role")
+    # permissions = relationship("Permission", backref="role")
 
     def __init__(self, role_name, role_desc="", *args, **kwargs):
         """

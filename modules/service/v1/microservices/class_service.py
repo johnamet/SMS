@@ -10,10 +10,13 @@ unenrolling students, and more.
 
 from flask import jsonify, request, abort, make_response
 
+from models import storage, Student
 from modules.class_management.class_management import ClassManagement
 from modules.service.v1.microservices import services
+from modules.user_management.user_management import UserManagement
 
 class_management = ClassManagement()
+user_management = UserManagement()
 
 
 @services.route('/classes', methods=['GET'], strict_slashes=False)
@@ -26,10 +29,32 @@ def get_all_classes():
     """
     try:
         classes, msg = class_management.get_classes()
-        class_dict = {class_.id: class_.serialize() for class_ in classes}
+        class_list = []
+        for class_ in classes:
+            class_details = class_.serialize()
+
+            class_details["grades"] = [grade.serialize() for grade in class_.gradebooks]
+            class_details["attendances"] = []
+
+            class_details["students"] = [student.serialize() for student in class_.students]
+            teacher, _ = user_management.get_user(class_.head_class_teacher)
+            class_details['class_teacher'] = teacher.first_name + " " + teacher.last_name
+            if class_.assist_class_teacher:
+                assist, _ = user_management.get_user(class_.assist_class_teacher)
+                class_details['assist_class_teacher'] = assist.first_name + " " + assist.last_name
+
+            for attendance in class_.attendances:
+                student_name = attendance.student.first_name + " " + attendance.student.last_name
+                attendance = attendance.serialize()
+                attendance['student_name'] = student_name
+
+                class_details['attendances'].append(attendance)
+
+            class_list.append(class_details)
+
         result = {
             "status_msg": msg,
-            "classes": class_dict
+            "classes": class_list
         }
         return make_response(jsonify(result), 200)
     except Exception as e:
@@ -81,7 +106,6 @@ def create_class():
         courses_list = data.get('courses_list')
         assist_class_teacher = data.get('assist_class_teacher')
         students_list = data.get('students_list')
-
         if not class_name or not head_class_teacher or not academic_year or not courses_list:
             abort(400, "Class name, head class teacher, academic year, and courses list are required")
 
@@ -150,3 +174,15 @@ def delete_class(class_id):
         abort(400, str(ve))
     except Exception as e:
         abort(500, f"Internal Server Error: {str(e)}")
+
+
+@services.route("/students/<student_id>", methods=["GET"], strict_slashes=False)
+def get_student(student_id):
+    student = storage.get_by_id(Student, student_id)
+
+    result = {
+        "student": student.serialize(),
+        "message": "Student Retrieved Successfully"
+    }
+
+    return jsonify(result), 200

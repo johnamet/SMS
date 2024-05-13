@@ -1,14 +1,17 @@
-$(document).ready(function (){
+$(document).ready(function () {
     const loginButton = $('.button');
     const emailField = $('#email');
     const passwordField = $('#password');
+    const loader = $('.custom-loader')
 
-    loginButton.click(function (){
-        console.log("Clicked");
+    loader.hide();
+
+    loginButton.click(function () {
+        loader.show();
         login();
     });
 
-    function login(){
+    function login() {
         $.ajax({
             type: 'POST',
             url: 'http://127.0.0.1:8080/services/v1/login',
@@ -27,8 +30,11 @@ $(document).ready(function (){
                     alert("Failed to login");
                 }
             },
-            error: function (error){
+            error: function (error) {
                 alert("Failed to login");
+            },
+            complete: function () {
+                loader.hide();
             }
         });
     }

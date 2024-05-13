@@ -9,6 +9,7 @@
     <orderEntry type="library" name="animate.css" level="application" />
     <orderEntry type="library" name="@teleporthq" level="application" />
     <orderEntry type="library" name="@teleporthq/teleport-custom-scripts" level="application" />
+    <orderEntry type="library" name="jquery-3.6.0" level="application" />
   </component>
   <component name="PyDocumentationSettings">
     <option name="format" value="PLAIN" />

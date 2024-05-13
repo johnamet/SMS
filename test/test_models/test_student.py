@@ -44,9 +44,9 @@ class TestStudentRelationships(unittest.TestCase):
 
         self.parent.students.append(self.student)
 
-        self.gradebook1 = Grade(course_id="course_1", student_id=self.student.id, grade=15, class_id="class_id",
+        self.gradebook1 = Grade(course_id="course_1", student_id=self.student.id, grade=9, class_id="class_id",
                                 grade_desc="homework", term="Term 2", academic_year="2023/24")
-        self.gradebook2 = Grade(course_id="course_2", student_id=self.student.id, grade=15, class_id="class_id",
+        self.gradebook2 = Grade(course_id="course_2", student_id=self.student.id, grade=9, class_id="class_id",
                                 grade_desc="homework", term="Term 2", academic_year="2023/24")
         self.attendance1 = Attendance(date=datetime(2024, 4, 20), student_id=self.student.id,
                                       class_id="class_id", term="Term 2", status=1, academic_year="2022/2023")

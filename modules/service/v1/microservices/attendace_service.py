@@ -7,8 +7,9 @@ from flask import jsonify, request, abort, make_response
 
 from models import Attendance
 from modules.attendance_tracking.attendance_management import AttendanceManagement
+from modules.class_management.class_management import ClassManagement
 from modules.service.v1.microservices import services
-
+class_management = ClassManagement()
 attendance_management = AttendanceManagement()
 
 
@@ -22,11 +23,10 @@ def get_all_attendance():
     """
     try:
         attendances, msg = attendance_management.get_attendance()
-        attendance_dict = {attendance.id: attendance.serialize()
-                           for attendance in attendances}
+        attendance_list = [attendance.serialize() for attendance in attendances]
         result = {
             "status_msg": msg,
-            "attendances": attendance_dict
+            "attendances": attendance_list
         }
         return make_response(jsonify(result), 200)
     except Exception as e:
@@ -152,6 +152,39 @@ def get_attendance_student(student_id):
     except Exception as e:
         abort(500, f"Internal Server Error: {str(e)}")
 
+@services.route("/attendance/class/<class_id>/stats", methods=["GET"], strict_slashes=False)
+def get_attendance_class_stats(class_id):
+
+    try:
+        if not class_id:
+            abort(400, "Class ID cannot be empty")
+        class_ = class_management.get_class(class_id)
+        attendances, msg = attendance_management.get_attendance_by_class_id(class_id=class_id)
+
+        present = [attendance.status  for attendance in attendances if attendance.status == 1]
+        absent = [attendance.status for attendance in attendances if attendance.status == 0]
+
+        num_present= len(present)
+        num_absent = len(absent)
+        num_roll =  len(class_.students)
+
+        if num_roll != 0:
+            attendance_rate = int((num_present/(60 * num_roll)) * 100)
+        else:
+            attendance_rate = 0
+
+        results = {
+            "num_roll": num_roll,
+            "present": num_present,
+            "absent": num_absent,
+            "attendance_rate": attendance_rate
+        }
+
+        return jsonify(results), 200
+    except Exception as e:
+        abort(500, e)
+
+
 
 @services.route("/attendance/class/<class_id>", methods=["GET"], strict_slashes=False)
 def get_attendance_by_class(class_id):
@@ -166,7 +199,7 @@ def get_attendance_by_class(class_id):
     """
     try:
         if not class_id:
-            abort(400, "Student ID cannot be empty")
+            abort(400, "Class ID cannot be empty")
 
         attendances, msg = attendance_management.get_attendance_by_class_id(class_id=class_id)
         # Initialize an empty nested dictionary to store attendance data

@@ -1,4 +1,4 @@
-$(document).ready(function() {
+$(document).ready(function () {
     const loginButton = $('.home-buttons .home-login')
 
     loginButton.click(function () {

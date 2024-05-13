@@ -8,7 +8,7 @@ including marking attendance, retrieving class information, enrolling and
 unenrolling students, and more.
 """
 
-from models import Class, storage, Student, ClassCourseAssociation, Course
+from models import Class, storage, Student, ClassCourseAssociation, Course, Staff, User
 from models.class_student_association import StudentClassAssociation
 from modules.attendance_tracking.attendance_management import AttendanceManagement
 
@@ -300,7 +300,7 @@ class ClassManagement:
         """
 
         try:
-            query = storage.query(Class)
+            query = storage.query(Class).order_by(Class.class_name)
         except Exception as e:
             return None, f"Error getting classes: {str(e)}"
 
@@ -409,6 +409,12 @@ class ClassManagement:
             class_details["grades"] = [grade.serialize() for grade in class_.gradebooks]
             class_details["attendances"] = [attendance.serialize() for attendance in class_.attendances]
             class_details["students"] = [student.serialize() for student in class_.students]
+            teacher = storage.get_by_id(User, class_.head_class_teacher,)
+            class_details['class_teacher'] = teacher.first_name + " " + teacher.last_name
+            if class_.assist_class_teacher:
+                assist = storage.get_by_id(User, class_.assist_class_teacher)
+                class_details['assist_class_teacher'] = assist.first_name + " " + assist.last_name
+
 
             return class_details, "Class details retrieved successfully."
         except Exception as e:

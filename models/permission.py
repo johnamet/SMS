@@ -31,7 +31,7 @@ class Permission(BaseModel, Base):
 
     permission_name = Column(String(50), unique=True, nullable=False)
     permission_desc = Column(String(124), nullable=False)
-    role_id = Column(String(50), ForeignKey('roles.id'), nullable=False)
+    # role_id = Column(String(50), ForeignKey('roles.id'), nullable=False)
     assigned_user_id = Column(String(50), ForeignKey('users.id'), nullable=False)
     access_level = Column(Integer, nullable=False, default=0)
 

@@ -5,6 +5,7 @@ The script defines the database storage class.
 from os import environ
 
 from sqlalchemy import create_engine
+from sqlalchemy.pool import QueuePool
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 from models.announcement import Announcement
@@ -45,10 +46,12 @@ class DBStorage:
                 self.__database = environ["STORAGE_DATABASE"]
                 self.__host = environ["STORAGE_HOST"]
 
-                # Create the engine
+                # Create the engine with connection pool
                 self.__engine = create_engine(
                     f'mysql+mysqldb://{self.__user}:{self.__password}@{self.__host}/{self.__database}',
-                    pool_pre_ping=True,
+                    poolclass=QueuePool,
+                    pool_size=5,
+                    pool_pre_ping=True,  # Optional
                 )
 
                 # Create session factory
