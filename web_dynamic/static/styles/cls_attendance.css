@@ -18,7 +18,7 @@ a:hover::after {
 }
 
 ::-webkit-scrollbar-track {
-  background: #14A9FF;
+  background: LightSeaGreen;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -194,6 +194,8 @@ body {
   justify-content: space-between;
   width: 100%;
   height: auto;
+  padding: 10px;
+  margin: 5px;
 }
 
 .main-content {
@@ -318,15 +320,47 @@ body {
     overflow: scroll;
     border-radius: 25px;
     z-index: 998;
+    animation: glow 5s ;
 }
 
-keyframes glow {
+table tr th {
+  background: transparent;
+  border-radius: 1px;
+  box-shadow: 0 2px 4px 0 SeaGreen, inset 0px -2px 1px 1px MediumSeaGreen;
+}
+
+table tr td {
+  justify-content: center;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  background: transparent;
+  border-radius: 1px;
+}
+@keyframes myAnim {
+	0% {
+		transform: scale(0.5);
+	}
+
+	100% {
+		transform: scale(1);
+	}
+}
+
+@keyframes glow {
   0% {
     filter: hue-rotate(0deg);
   }
   100% {
     filter: hue-rotate(360deg);
   }
+  	0% {
+		transform: scale(0.5);
+	}
+
+	100% {
+		transform: scale(1);
+	}
 }
 
 @keyframes glow15 {

@@ -1,7 +1,8 @@
 import random
 from datetime import datetime, timedelta, date
 from faker import Faker
-from models import User, Staff, Parent, Class, Student, Attendance, Course, Grade, StudentClassAssociation, storage
+from models import User, Staff, Parent, Class, Student, Attendance, Course, Grade, StudentClassAssociation, storage, \
+    ClassCourseAssociation
 from modules.class_management.class_management import ClassManagement
 
 faker = Faker()
@@ -51,15 +52,20 @@ def create_attendance(student_id, class_id):
     attendance.save()
 
 
-def create_course(class_id, staff_id):
+def create_course(class_id, staff_id, classes):
     """Create a course for a class taught by a staff member."""
     course_dict = {
         "course_name": random.choice(SUBJECTS),
         "course_description": "This is a test course",
         "teacher_id": staff_id,
         "class_id": class_id,
+        "department": random.choice(["Primary Department", "Secondary Department"]),
     }
+
     course = Course(**course_dict)
+    for class_ in classes:
+        association = ClassCourseAssociation(classe=class_)
+        course.classes.append(association)
     course.save()
     return course
 
@@ -118,7 +124,7 @@ def populate_db(range_=50):
 
     courses = []
     for _ in range(range_):
-        course = create_course(random.choice(classes), random.choice(teachers))
+        course = create_course(random.choice(classes), random.choice(teachers), classes)
         courses.append(course.id)
 
     grades = []

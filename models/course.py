@@ -26,9 +26,11 @@ class Course(BaseModel, Base):
     __tablename__ = 'courses'
     course_name = Column(String(50), nullable=False)
     course_description = Column(String(124), nullable=False)
+    department = Column(String(50), nullable=False)
     teacher_id = Column(String(50), ForeignKey("staff.id"), nullable=False)
     classes = relationship(ClassCourseAssociation, back_populates="course")
     gradebooks = relationship("Grade", back_populates="course")
+    teacher = relationship("Staff", backref="course")
 
     def __init__(self, course_name, course_description, teacher_id, *args, **kwargs):
         """

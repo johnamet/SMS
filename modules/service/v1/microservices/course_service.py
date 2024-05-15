@@ -19,6 +19,7 @@ Endpoints:
 
 from flask import jsonify, request, abort, make_response
 
+from models import storage, User
 from modules.course_management.course_management import CourseManagement
 from modules.service.v1.microservices import services
 
@@ -35,10 +36,21 @@ def get_all_courses():
     """
     try:
         courses, msg = course_management.get_courses()
-        course_dict = {course.id: course.serialize() for course in courses}
+
+        course_list = []
+
+        for course in courses:
+            classes = course.classes
+            teacher = course.teacher
+            teacher_ = storage.get_by_id(User, teacher.id)
+            course = course.serialize()
+            course["classes"] = [class_.classe.serialize() for class_ in classes]
+            course["teacher"] = teacher_.first_name + " " + teacher_.last_name
+            course_list.append(course)
+
         result = {
             "status_msg": msg,
-            "courses": course_dict
+            "courses": course_list
         }
         return make_response(jsonify(result), 200)
     except Exception as e:

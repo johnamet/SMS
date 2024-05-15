@@ -25,7 +25,6 @@ $(document).ready(function () {
     }
 
     function fetchClassStats(infoDiv, data) {
-        console.log(data.attendances)
         if (!data || !data.attendances) {
             console.error("Error: No attendance data found.");
             return;

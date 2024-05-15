@@ -28,7 +28,6 @@ def get_gradebooks():
         class_id = response.get('class_id')
         academic_year = response.get('academic_year')
         term = response.get('term')
-
         gradebook_management.student_id = student_id
         gradebook_management.class_id = class_id
         gradebook_management.academic_year = academic_year

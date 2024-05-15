@@ -274,6 +274,8 @@ class CourseManagement:
                 "gradebooks": [gradebook.serialize() for gradebook in course.gradebooks]
             }
 
+            
+
             return course_details, "Retrieved course details successfully."
         except Exception as e:
             return None, f"Failed to retrieve course details: {str(e)}"
