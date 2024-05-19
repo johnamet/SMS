@@ -2,11 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Login | School Management Software</title>
     <link href="../../static/styles/login.css?{{ cache_id }}" rel="stylesheet" type="text/css">
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
-    <script type="text/javascript" src="../../static/scripts/login.js?{{ cache_id }}"></script>
+    <script src="../../static/scripts/login.js?{{ cache_id }}" type="text/javascript"></script>
 </head>
 <body>
 <div class="custom-loader"></div>
@@ -21,13 +22,13 @@
                 <div class="login__field">
                     <i class="login__icon fas fa-user"></i>
                     <label>
-                        <input type="text" class="login__input" placeholder="Email" id="email">
+                        <input class="login__input" id="email" placeholder="Email" type="text">
                     </label>
                 </div>
                 <div class="login__field">
                     <i class="login__icon fas fa-lock"></i>
                     <label>
-                        <input type="password" class="login__input" placeholder="Password" id="password">
+                        <input class="login__input" id="password" placeholder="Password" type="password">
                     </label>
                 </div>
                 <button class="button login__submit" type="button">

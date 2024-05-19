@@ -540,7 +540,7 @@ body {
  display: flex;
   flex-direction: column;
   text-align: center;
-  margin: 10px;
+  margin: 20px;
   height: auto;
   padding: 10px;
   border-radius: 10px;
@@ -548,6 +548,12 @@ body {
   overflow: scroll;
   align-items: center;
   box-shadow: 0 20px 40px 0 SeaGreen, inset 0px -10px 17px 1px MediumSeaGreen;
+}
+
+.main-container {
+  width: 100%;
+  height: 100%;
+  padding: 20px;
 }
 
 .featured-container > div {

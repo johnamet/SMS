@@ -74,7 +74,7 @@ def get_course(course_id):
 
         course, msg = course_management.get_course_details(course_id)
         if course:
-            return jsonify({course_id: course, "status_msg": msg}), 200
+            return jsonify({"course": course, "status_msg": msg}), 200
         else:
             abort(404, msg)
     except ValueError as ve:

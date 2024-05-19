@@ -68,11 +68,22 @@ def courses_portal():
 
     return render_template('/pages/portal/courses.html', cache_id=cache_id)
 
+
+@app.route('/courses/<course_name>', strict_slashes=False)
+def courses_course_page(course_name):
+    print(course_name)
+    cache_id = uuid.uuid4()
+
+    return render_template('/pages/course_page.html', cache_id=cache_id)
 @app.route('/class-attendance', strict_slashes=False)
 def class_attendance_portal():
     cache_id = uuid.uuid4()
     return render_template('/pages/class_attendance.html', cache_id=cache_id)
 
+@app.route('/students', strict_slashes=False)
+def students_portal():
+    cache_id = uuid.uuid4()
+    return render_template('/pages/student.html', cache_id=cache_id)
 
 if __name__ == '__main__':
     app.run("0.0.0.0", 8081, debug=True)
