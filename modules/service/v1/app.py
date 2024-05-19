@@ -74,12 +74,12 @@ def generate_app_secret(length=32):
     # Encode the ciphertext for storage/transmission
     return base64.b64encode(iv + ciphertext).decode('utf-8')
 
-#
-# @app.before_request
-# def before_request():
-#     # prompt user to log in to get an access token
-#     if request.endpoint not in ['services.login']:
-#         verify_jwt_in_request()
+
+@app.before_request
+def before_request():
+    # prompt user to log in to get an access token
+    if request.endpoint not in ['services.login']:
+        verify_jwt_in_request()
 
 
 @app.teardown_appcontext

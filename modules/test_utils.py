@@ -139,5 +139,6 @@ def populate_db(range_=50):
             create_attendance(student.id, random.choice([class_.id for class_ in classes]))
 
 
+
 if __name__ == '__main__':
     populate_db()
