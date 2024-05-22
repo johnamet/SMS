@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -f http://localhost:8080/health || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+    environment:
+      STORAGE_ENGINE: db
+      STORAGE_USER: dev_sms
+      STORAGE_PASSWORD: dev_sms_password
+      STORAGE_DATABASE: sms_db
+      STORAGE_HOST: db
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: sms_db
+      MYSQL_USER: dev_sms
+      MYSQL_PASSWORD: dev_sms_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+
